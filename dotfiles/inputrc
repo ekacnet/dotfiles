@@ -1,0 +1,50 @@
+set editing-mode vi
+set bell-style visible
+
+# From Jim meyering
+
+#"\C-x\C-x": "!!\C-m"
+#"\C-s": forward-search-history
+#"\C-q": quoted-insert
+
+# Display file type
+#set visible-stats On
+# When on lines are wrapped when you scroll
+set horizontal-scroll-mode Off
+TAB: complete
+# Force 8 bit input even on terminals that claim not to support it ...
+set input-meta On
+# Force 8 bit output even on terminals that claim not to support it ...
+set output-meta On
+# Don't convert 8 bit char to escape something with an escape sequence 
+set convert-meta Off
+
+# In a search of a better shortcut
+#"\C-g": dump-variables
+#"\C-g": dump-functions
+# equivalent of pressing tab twice
+"\C-D": possible-completions
+"\C-L": clear-screen
+# Alternatives to backspace
+"\C-?": backward-delete-char
+"\C-h": backward-delete-char
+# Otherways of pressing return
+"\C-j": accept-line
+"\C-m": accept-line
+# complete the word under the cursor, kind of like tab
+"\C-i": complete
+# how to search in the history 
+"\C-r": reverse-search-history
+# expand alias and word expension like !!
+"\C-b": shell-expand-line
+"\C-G": re-read-init-file
+# undo any edit that was done in the current line
+"\C-_": undo
+# swap the char under the cursor with the one before
+"\C-t": transpose-chars
+# Switch to vi movement mode (j, k, h, l ...)
+"\e": vi-movement-mode
+# kill everything from the begining of the line to the cursor
+"\C-u": unix-line-discard
+"\C-w": unix-word-rubout
+"\C-y": yank
