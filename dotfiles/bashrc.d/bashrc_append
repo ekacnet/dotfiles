@@ -1,0 +1,36 @@
+if [ 0 -eq 1 ]; then
+  source $HOME/.bashrc.d/scm-prompt.sh
+  true
+else
+  source /usr/lib/git-core/git-sh-prompt
+  function _dotfiles_scm_info ()
+  {
+    __git_ps1 " (%s)"
+  }
+fi
+
+function prompt-show-status ()
+{
+  # Don't use `status'.  It's read-only in zsh.
+  local stat="$?"
+
+  if test $stat -ne 0 -a $stat != 128; then
+    # If process exited by a signal, determine name of signal.
+    if test $stat -gt 128; then
+      local signal="$(builtin kill -l $[$stat - 128] 2>/dev/null)"
+      test "$signal" && signal=" ($signal)"
+    fi
+    echo "(╥_╥) $stat$signal "
+  else
+    #echo "¯\\_(ツ)_/¯"
+    echo "(ok)"
+  fi
+  #test "$BASH" && history -a
+  return 0
+}
+
+source $HOME/.bashrc.d/term_colors
+export PS1="$N[$MC\t$N]──[$MR\u$N@$MB\h$N]:$MG\w $N\$\n\
+└──$N\$(prompt-show-status)$N$MM\$(_dotfiles_scm_info) $N\$ "
+export EDITOR=vim
+

@@ -52,6 +52,10 @@ for item in * ; do
 done
 popd &>/dev/null
 
+if [ -e $HOME/.bashrc.d/bashrc_append ]; then
+	cat $HOME/.bashrc.d/bashrc_append >>$HOME/.bashrc
+fi
+
 vim_update=$HOME/.vim/update.sh
 if [ -x $vim_update ]; then
 	echo "Setting up vim plugins..."

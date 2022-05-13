@@ -84,16 +84,14 @@ nnoremap <C-w>h :silent call KeepCurrentLine('h')<CR>
 nnoremap <C-w>l :silent call KeepCurrentLine('l')<CR>
 
 " Search for the word under the cursor in the current directory
-nmap <M-k>    mo:Ack! "\b<cword>\b" <CR>
 nmap <M-S-k>  mo:Ggrep! "\b<cword>\b" <CR>
-nmap <Esc>k   mo:Ack! "\b<cword>\b" <CR>
 nmap <Esc>K   mo:Ggrep! "\b<cword>\b" <CR>
-nmap ˚        mo:Ack! "\b<cword>\b" <CR>
+nmap <M-k>    mo:Ack! "\b<cword>\b" <CR>
+nmap <Esc>k   mo:Ack! "\b<cword>\b" <CR>
 
 " Alt-W to delete a buffer and remove it from the list but keep the window via bufkill.vim
 nmap <Esc>w :BD<CR>
 nmap <M-w>  :BD<CR>
-nmap ∑      :BD<CR>
 
 " Typing `$c` on the command line expands to `:e` + the current path, so it's easy to edit a file in
 " the same directory as the current file.
