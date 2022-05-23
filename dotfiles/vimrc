@@ -246,3 +246,4 @@ command! W w
 
 " Close all buffers except this one
 command! BufCloseOthers %bd|e#
+autocmd BufEnter *.md setlocal textwidth=0
