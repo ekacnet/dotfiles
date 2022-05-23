@@ -42,7 +42,7 @@ echo "Creating symlinks..."
 pushd $basedir &>/dev/null
 for item in * ; do
   case "$item" in
-    .|..|.git*|*.swp)
+    .|..|.git|*.swp)
       continue
       ;;
     *)
