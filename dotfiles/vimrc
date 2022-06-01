@@ -1,6 +1,19 @@
 " leader is a comma now
 let mapleader = ','
 
+" Use pathogen to easily modify the runtime path to include all
+" " plugins under the ~/.vim/bundle directory
+if version >= 700
+     if exists("g:loaded_pathogen") 
+        execute "call pathogen#runtime_append_all_bundles()"
+        filetype off
+        call pathogen#infect()
+        filetype plugin indent on
+    endif
+endif
+
+syntax on
+
 " n = normal (ie. not in command, visual, select)
 " i = insert mode
 " c = command mode
@@ -52,6 +65,10 @@ nmap \x :cclose<CR>
 " Useful on mac, save the file and call open on the filename of the current buffer (%)
 nmap \z :w<CR>:!open %<CR><CR>
 
+nmap <F8> :TagbarToggle<CR>
+"Map F5 but with no recursion
+nnoremap <F5> :GundoToggle<CR>
+
 " Turn off linewise keys. Normally, the `j' and `k' keys move the cursor down one entire line. with
 " line wrapping on, this can cause the cursor to actually skip a few lines on the screen because
 " it's moving from line N to line N+1 in the file. I want this to act more visually -- I want `down'
@@ -93,6 +110,10 @@ nmap <Esc>k   mo:Ack! "\b<cword>\b" <CR>
 nmap <Esc>w :BD<CR>
 nmap <M-w>  :BD<CR>
 
+" Quickly edit/reload the vimrc file
+nmap <silent> <leader>ev :e $MYVIMRC<CR>
+nmap <silent> <leader>sv :so $MYVIMRC<CR>
+
 " Typing `$c` on the command line expands to `:e` + the current path, so it's easy to edit a file in
 " the same directory as the current file.
 cnoremap $c e <C-\>eCurrentFileDir()<CR>
@@ -102,6 +123,17 @@ cnoremap $c e <C-\>eCurrentFileDir()<CR>
 cnoremap w!! %!sudo tee > /dev/null %
 
 " Functions
+function! CommitMessages()
+    nmap S iSigned-off-by: Matthieu Patou <mat@matws.net><CR><ESC>
+    nmap R iReviewed-by: Matthieu Patou <mat@matws.net><CR><ESC>
+    " abreviation that works in insert mode
+    iab #S Signed-off-by: Matthieu Patou <mat@matws.net>
+    iab #R Reviewed-by: Matthieu Patou <mat@matws.net>
+    iab #O Signed-off-by:
+    iab #V Reviewed-by:
+    iab #P Pair-Programmed-With:
+endf
+
 function! CurrentFileDir()
    return "e " . expand("%:p:h") . "/"
 endfunction
@@ -109,11 +141,13 @@ endfunction
 " Commands to send common keystrokes using tmux
 let g:tmux_console_pane = '0:0.0'
 let g:tmux_server_pane = '0:0.0'
+
 function TmuxPaneRepeat()
   write
   silent execute ':!tmux send-keys -t' g:tmux_console_pane 'C-p' 'C-j'
   redraw!
 endfunction
+
 function TmuxPaneClear()
   silent execute ':!tmux send-keys -t' g:tmux_server_pane 'C-j' 'C-j' 'C-j' 'C-j' 'C-j' 'C-j' 'C-j'
   redraw!
@@ -129,7 +163,8 @@ function! KeepCurrentLine(motion)
   endif
 endfunction
 
-" Autocmd
+" Create a group for autocmd ?
+"augroup config
 
 " Resize panes when window/terminal gets resize
 autocmd VimResized * :wincmd =
@@ -167,11 +202,21 @@ autocmd BufReadPost *
 	\ if line("'\"") > 0 && line("'\"") <= line("$") |
 	\   exe "normal g`\"" |
 	\ endif
+autocmd BufWinEnter COMMIT_EDITMSG,*.diff,*.patch,*.patches.txt call CommitMessages()
+autocmd BufEnter *.md setlocal textwidth=0
+
+" augroup END
 
 " ----------------------------------------------------------------------------
 " OPTIONS
 " ----------------------------------------------------------------------------
 
+"set number                 " TODO should I re-enable that 
+"set nowrap                 " TODO revisit if I want wraping or not 
+"set nocompatible           " no compatible mode maybe ...
+"set smarttab               " insert tabs on the start of a line according to
+                            " shifwidth, not tabstop
+"set noswapfile
 set autoindent              " Carry over indenting from previous line
 " set autoread                " Don't bother me hen a file changes
 set autowrite               " Write on :next/:prev/^Z
@@ -183,7 +228,8 @@ set cino=                   " See :h cinoptions-values
 set clipboard=unnamedplus
 set commentstring=\ \ #%s   " When folds are created, add them to this
 set copyindent              " Make autoindent use the same chars as prev line
-set directory-=.            " Don't store temp files in cwd
+set directory-=.            " Don't store temp files in cwd, ie. take what you have already in
+                            " directory variable and remove '.' from it
 set encoding=utf8           " UTF-8 by default
 set expandtab               " No tabs
 set fileformats=unix,dos,mac  " Prefer Unix
@@ -232,9 +278,16 @@ set textwidth=100           " 100 is the new 80
 set thesaurus+=~/.vim/mthes10/mthesaur.txt
 set wildmenu                " Show possible completions on command line
 set wildmode=list:longest,full " List all options and complete
-set wildignore=*.class,*.o,*~,*.pyc,.git,node_modules  " Ignore certain files in tab-completion
+set wildignore=*.class,*.o,*~,*.pyc,*.class,*.swp,*.bak,.git,node_modules  " Ignore certain files in tab-completion
 
 set pastetoggle=<F2>                                         " Allow to switch in paste mode
+set undolevels=1000      " use many muchos levels of undo
+set title                " change the terminal's title
+set tags=./tags,./TAGS,tags,TAGS
+"TODO customize status line
+"set statusline=%<%f%h%m%r%=style=%{CodingStyle()}\ %15(L%l,C%c%V%)\ %3P
+
+
 
 " ----------------------------------------------------------------------------
 " CUSTOM COMMANDS
@@ -246,4 +299,12 @@ command! W w
 
 " Close all buffers except this one
 command! BufCloseOthers %bd|e#
-autocmd BufEnter *.md setlocal textwidth=0
+
+" Now load specifics to this host
+if filereadable(expand("~/.vimrc.local"))
+  source ~/.vimrc.local
+endif
+ 
+" Some plugin seems to search for something at startup, so this fixes that.
+silent! nohlsearch
+
