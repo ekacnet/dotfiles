@@ -64,6 +64,10 @@ nmap \w :setlocal wrap!<CR>:setlocal wrap?<CR>
 nmap \x :cclose<CR>
 " Useful on mac, save the file and call open on the filename of the current buffer (%)
 nmap \z :w<CR>:!open %<CR><CR>
+nmap ; :Buffers<CR>
+nmap <Leader>t :Files<CR>
+nmap <Leader>r :Tags<CR>
+
 
 nmap <F8> :TagbarToggle<CR>
 "Map F5 but with no recursion

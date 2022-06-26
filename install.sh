@@ -80,6 +80,27 @@ else
   echo "Skipping tmux setup because tmux isn't installed."
 fi
 
+if which fzf >/dev/null 2>&1; then
+  echo "Setting up fzf ..."
+  fzf=$(dpkg -L fzf 2>&1|grep fzf.vim |head -1)
+  if [ "a$fzf" == "a" ]; then
+    fzf=$(rpm -ql fzf 2>&1|grep fzf.vim |head -1)
+  fi
+  if [ "a$fzf" != "a" -a -e $fzf ]; then
+    mkdir -p "$HOME/.vim/bundle/fzf/autoload"
+    ln -s $fzf "$HOME/.vim/bundle/fzf/autoload"
+  fi
+  fzf_vim="$HOME/.tmux/plugins/fzf.vim"
+  if [ -e "$fzf_vim" ]; then
+    pushd "$fzf_vim" >/dev/null
+    git pull -q origin master
+    popd >/dev/null
+  else
+    git clone -q https://github.com/junegunn/fzf.vim.git  "$HOME/.vim/bundle/fzf.vim"
+  fi
+fi
+
+
 postinstall="$HOME/.postinstall"
 if [ -e "$postinstall" ]; then
   echo "Running post-install..."
