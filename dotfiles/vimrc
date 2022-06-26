@@ -4,12 +4,9 @@ let mapleader = ','
 " Use pathogen to easily modify the runtime path to include all
 " " plugins under the ~/.vim/bundle directory
 if version >= 700
-     if exists("g:loaded_pathogen") 
-        execute "call pathogen#runtime_append_all_bundles()"
-        filetype off
-        call pathogen#infect()
-        filetype plugin indent on
-    endif
+  filetype off
+  call pathogen#infect()
+  filetype plugin indent on
 endif
 
 syntax on
