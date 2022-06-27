@@ -101,6 +101,18 @@ if which fzf >/dev/null 2>&1; then
 fi
 
 
+if which clang-format >/dev/null 2>&1; then
+  echo "Setting up clang-format ..."
+  clang_format=$(dpkg -L clang-format 2>&1|grep clang-format.py |head -1)
+  if [ "a$clang-format" == "a" ]; then
+    clang_format=$(rpm -ql clang-format 2>&1|grep clang-format.py |head -1)
+  fi
+  if [ "a$clang_format" != "a" -a -e $clang_format ]; then
+    ln -s $clang_format "$HOME/.vim/"
+  fi
+fi
+
+
 postinstall="$HOME/.postinstall"
 if [ -e "$postinstall" ]; then
   echo "Running post-install..."
