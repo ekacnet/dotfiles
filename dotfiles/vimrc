@@ -144,6 +144,8 @@ function! CommitMessages()
     iab #O Signed-off-by:
     iab #V Reviewed-by:
     iab #P Pair-Programmed-With:
+    " Go to the first line of the commit message
+    exe ":1"
 endf
 
 function! CurrentFileDir()
@@ -207,14 +209,17 @@ autocmd BufReadPost *.pdf exec "%s/[^[:alnum:][:punct:][:space:]]//g"
 
 " By default vim keep a in the mark named " the last line where the cursor was
 " when the file was last open.
+" '" is how to get this address, of course we need to escape this when calling functions like line()
+" or execute so "'\""
+" Note ' or ` is the same, and using g' over just ' means that the jump list is not changed
 " So with the autocmd if the mark " is set then go to this mark: g'" but 
 " but because this part of an exe we need to escape it
 " It's basically to allow to go back to the last position in the file when
 " the file has been read
 autocmd BufReadPost *
-	\ if line("'\"") > 0 && line("'\"") <= line("$") |
-	\   exe "normal g`\"" |
-	\ endif
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \   exe "normal g`\"" |
+        \ endif
 autocmd BufWinEnter COMMIT_EDITMSG,*.diff,*.patch,*.patches.txt call CommitMessages()
 autocmd BufEnter *.md setlocal textwidth=0
 
