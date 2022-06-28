@@ -9,7 +9,12 @@ if [ ! -e $basedir ]; then
   echo "$basedir didn't seems to exists, sorry"
   exit 1
 fi
+
 #repourl="git://github.com/statico/dotfiles.git"
+skip_append=0
+if [ -e $HOME/.bashrc.d/bashrc_append ]; then
+  skip_append=1
+fi
 
 function symlink() {
   src="$1"
@@ -52,18 +57,64 @@ for item in * ; do
 done
 popd &>/dev/null
 
-if [ -e $HOME/.bashrc.d/bashrc_append ]; then
-	cat $HOME/.bashrc.d/bashrc_append >>$HOME/.bashrc
+if [ -e $HOME/.bashrc.d/bashrc_append -a $skip_append -eq 0 ]; then
+    cat $HOME/.bashrc.d/bashrc_append >>$HOME/.bashrc
 fi
 
-vim_update=$HOME/.vim/update.sh
+repos=(
+  tpope/vim-pathogen
+  junegunn/fzf.vim
+  mileszs/ack.vim
+  sheerun/vim-polyglot
+)
+
+other_repos=(
+  airblade/vim-gitgutter
+  alampros/vim-styled-jsx
+  ap/vim-css-color
+  docunext/closetag.vim
+  ervandew/supertab
+  haya14busa/incsearch.vim
+  itchyny/lightline.vim
+  jparise/vim-graphql
+  junegunn/goyo.vim
+  nfnty/vim-nftables
+  qpkorr/vim-bufkill
+  scrooloose/nerdtree
+  statico/vim-inform7
+  tpope/vim-commentary
+  tpope/vim-endwise
+  tpope/vim-eunuch
+  tpope/vim-fugitive
+  tpope/vim-repeat
+  tpope/vim-rhubarb
+  tpope/vim-sleuth
+  tpope/vim-surround
+  tpope/vim-unimpaired
+  vim-scripts/openvpn
+  w0rp/ale
+  wellle/targets.vim
+
+  altercation/vim-colors-solarized
+  arcticicestudio/nord-vim
+  nanotech/jellybeans.vim
+  rakr/vim-one
+  sonph/onehalf
+  tomasr/molokai
+  vim-scripts/wombat256.vim
+)
+
+vim_update=$HOME/.vim/bin/update.sh
 if [ -x $vim_update ]; then
-	echo "Setting up vim plugins..."
-	echo sh $HOME/.vim/update.sh
-fi
-exit 0
+  echo "Setting up vim plugins..."
 
-if which tmux >/dev/null 2>&1 ; then
+  for repo in ${repos[@]}; do
+    sh $vim_update $repo
+  done
+
+fi
+
+if [ which tmux >/dev/null 2>&1 ] && [ -e $HOME/.tmux ] ; then
   echo "Setting up tmux..."
   tpm="$HOME/.tmux/plugins/tpm"
   if [ -e "$tpm" ]; then
@@ -86,17 +137,9 @@ if which fzf >/dev/null 2>&1; then
   if [ "a$fzf" == "a" ]; then
     fzf=$(rpm -ql fzf 2>&1|grep fzf.vim |head -1)
   fi
-  if [ "a$fzf" != "a" -a -e $fzf ]; then
+  if [ "a$fzf" != "a" -a -e $fzf -a ! -e "$HOME/.vim/bundle/fzf/autoload/fzf.vim" ]; then
     mkdir -p "$HOME/.vim/bundle/fzf/autoload"
     ln -s $fzf "$HOME/.vim/bundle/fzf/autoload"
-  fi
-  fzf_vim="$HOME/.tmux/plugins/fzf.vim"
-  if [ -e "$fzf_vim" ]; then
-    pushd "$fzf_vim" >/dev/null
-    git pull -q origin master
-    popd >/dev/null
-  else
-    git clone -q https://github.com/junegunn/fzf.vim.git  "$HOME/.vim/bundle/fzf.vim"
   fi
 fi
 
@@ -108,7 +151,7 @@ if which clang-format >/dev/null 2>&1; then
     clang_format=$(rpm -ql clang-format 2>&1|grep clang-format.py |head -1)
   fi
   if [ "a$clang_format" != "a" -a -e $clang_format ]; then
-    ln -s $clang_format "$HOME/.vim/"
+    ln -s $clang_format "$HOME/.vim/bin"
   fi
 fi
 
