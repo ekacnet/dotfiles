@@ -238,7 +238,7 @@ autocmd BufEnter *.md setlocal textwidth=0
 "set noswapfile
 set autoindent              " Carry over indenting from previous line
 "set autoread               " Don't bother me when a file changes
-set autowrite               " Write on :next/:prev/^Z
+"set autowrite               " Write on :next/:prev/^Z
 set backspace=indent,eol,start
                             " Allow backspace beyond insertion point
 set cindent                 " Automatic program indenting
@@ -303,6 +303,12 @@ set pastetoggle=<F2>        " Allow to switch in paste mode
 set undolevels=1000         " use many muchos levels of undo
 set title                   " change the terminal's title
 set tags=./tags,./TAGS,tags,TAGS
+"There is no point of doing noswapfile with shortmess+=A because if there is a swapfile (ie.
+".foo.swp) vim will ignore it and right away create .foo.swo. So it's kind of the same but in case
+"there is still a swapfile if really needed
+"set noswapfile             " No swapfile by default, make it easier to reopen a file
+"Something to note: polyglote plugin is changing directory to contain $HOME/.vim// and shortmess to
+"have also +A
 
 "TODO customize status line
 " For the moment it's never
