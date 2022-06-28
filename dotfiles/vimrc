@@ -222,14 +222,12 @@ autocmd BufReadPost *
         \   exe "normal g`\"" |
         \ endif
 autocmd BufWinEnter COMMIT_EDITMSG,*.diff,*.patch,*.patches.txt call CommitMessages()
-autocmd BufEnter *.md setlocal textwidth=0 | set swapfile | set shortmess-=A
 
 " augroup END
 
 " ----------------------------------------------------------------------------
 " OPTIONS
 " ----------------------------------------------------------------------------
-
 "set number                 " TODO should I re-enable that
 "set nowrap                 " TODO revisit if I want wraping or not
 "set nocompatible           " no compatible mode maybe ...
@@ -357,3 +355,6 @@ endif
  
 " Some plugin seems to search for something at startup, so this fixes that.
 silent! nohlsearch
+" Note this is not quite doing what I would like, it's not notifying me if there is already
+" a swapfile because the shortmess being set by polyglot..
+autocmd BufEnter *.md setlocal textwidth=0 | set swapfile | set shortmess-=A
