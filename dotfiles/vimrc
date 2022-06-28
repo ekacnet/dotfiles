@@ -126,7 +126,8 @@ cnoremap $c e <C-\>eCurrentFileDir()<CR>
 cnoremap w!! %!sudo tee > /dev/null %
 
 " Functions
-function FormatDiff()
+" ! to override
+function! FormatDiff()
     let l:lines = "all"
     if has('python')
       pyf ~/.vim/clang-format.py
@@ -157,13 +158,13 @@ map <C-c> :call FormatDiff()<CR>
 let g:tmux_console_pane = '0:0.0'
 let g:tmux_server_pane = '0:0.0'
 
-function TmuxPaneRepeat()
+function! TmuxPaneRepeat()
   write
   silent execute ':!tmux send-keys -t' g:tmux_console_pane 'C-p' 'C-j'
   redraw!
 endfunction
 
-function TmuxPaneClear()
+function! TmuxPaneClear()
   silent execute ':!tmux send-keys -t' g:tmux_server_pane 'C-j' 'C-j' 'C-j' 'C-j' 'C-j' 'C-j' 'C-j'
   redraw!
 endfunction
