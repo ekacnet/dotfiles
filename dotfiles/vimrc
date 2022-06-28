@@ -222,7 +222,7 @@ autocmd BufReadPost *
         \   exe "normal g`\"" |
         \ endif
 autocmd BufWinEnter COMMIT_EDITMSG,*.diff,*.patch,*.patches.txt call CommitMessages()
-autocmd BufEnter *.md setlocal textwidth=0
+autocmd BufEnter *.md setlocal textwidth=0 | set swapfile | set shortmess-=A
 
 " augroup END
 
