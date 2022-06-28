@@ -230,14 +230,14 @@ autocmd BufEnter *.md setlocal textwidth=0
 " OPTIONS
 " ----------------------------------------------------------------------------
 
-"set number                 " TODO should I re-enable that 
-"set nowrap                 " TODO revisit if I want wraping or not 
+"set number                 " TODO should I re-enable that
+"set nowrap                 " TODO revisit if I want wraping or not
 "set nocompatible           " no compatible mode maybe ...
 "set smarttab               " insert tabs on the start of a line according to
                             " shifwidth, not tabstop
 "set noswapfile
 set autoindent              " Carry over indenting from previous line
-" set autoread                " Don't bother me hen a file changes
+"set autoread               " Don't bother me when a file changes
 set autowrite               " Write on :next/:prev/^Z
 set backspace=indent,eol,start
                             " Allow backspace beyond insertion point
@@ -274,7 +274,7 @@ set list                    " Show whitespace as special chars - see listchars
 set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:· " Unicode characters for various things
 set matchtime=2             " Tenths of second to hilight matching paren
 set nomodeline              " teh hackerz!!!1
-silent! set mouse=a          " Use the mouse
+silent! set mouse=a         " Use the mouse
 set nobackup                " No backups left after done editing
 set visualbell t_vb=        " No flashing or beeping at all
 set nowritebackup           " No backups made while editing
@@ -299,9 +299,9 @@ set wildmenu                " Show possible completions on command line
 set wildmode=list:longest,full " List all options and complete
 set wildignore=*.class,*.o,*~,*.pyc,*.class,*.swp,*.bak,.git,node_modules  " Ignore certain files in tab-completion
 
-set pastetoggle=<F2>                                         " Allow to switch in paste mode
-set undolevels=1000      " use many muchos levels of undo
-set title                " change the terminal's title
+set pastetoggle=<F2>        " Allow to switch in paste mode
+set undolevels=1000         " use many muchos levels of undo
+set title                   " change the terminal's title
 set tags=./tags,./TAGS,tags,TAGS
 
 "TODO customize status line
@@ -351,4 +351,3 @@ endif
  
 " Some plugin seems to search for something at startup, so this fixes that.
 silent! nohlsearch
-
