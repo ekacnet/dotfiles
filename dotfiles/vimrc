@@ -19,6 +19,13 @@ syntax on
 
 " TODO fix: change color at the bottom to more clearly show in which window I am
 
+" Mapping for french keyboard for vim-unimpared
+nmap & [
+nmap = ]
+omap & [
+omap = ]
+xmap & [
+xmap = ]
 " TODO figure out what I want from this
 " NERDTreeFind, Goyo, ALE
 " Useful macros I use the most
