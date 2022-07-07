@@ -1,0 +1,54 @@
+\a \A for disabling/enabling autowrap
+\F for nerdtreefind
+\M tab indent 8 chars
+\T 8 chars indent
+\t 4 chars indent
+\s 2 chars indent
+\c tmuxclear
+\b no C indentation 80 col and autowrap
+\x close quickfix
+\w invert wrap
+\u invert list mode
+\r tmuxrepeat()
+\q no search highlight
+\o invert paste mode
+\p ProseMode
+\l invert number
+\i vip sort
+\g invert git gutter
+\f alefix
+\e nerdtree toggle
+\d aletogglebuffer
+; for a fuzz match on the buffer
+,t for fuzzy search of files
+,r for fuzzy search of tags
+,sv to source vimrc
+
+Crtl-c for formatting the file with clang format
+Ctrl-n / Ctrl-p for next/previous buffer
+<space> for fold toggle
+Ctrl-j/k/h/l for moving between buffers
+Alt-k/Esc-k for Ack on the current work
+Shitft-Alt-k for Ggrep on the current word
+Alt-w for closing and deleting current buffer
+
+$c for current directory
+w!! for saving a file that is RO
+
+debugging
+pou for adding echo/print 'pouet'
+tata for adding echo/print 'tatayoyo
+
+BufCloseOthers to close other buffer
+
+ysiw<char> to surround current word with <char>
+yss<char> to surround the current line
+cs<first char><second> to replace surrounding char 1 by surrounding char 2
+gc/gcgc to comment/uncomment a visual bloc
+gcc to comment a line
+:Move  to rename a file and a buffer
+
+&b for previous buffer (:cprev)
+=b for next buffer (:cnext)
+&A for first
+=A for last
