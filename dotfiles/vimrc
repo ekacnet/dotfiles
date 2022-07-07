@@ -137,6 +137,17 @@ cnoremap w!! %!sudo tee > /dev/null %
 
 " Functions
 " ! to override
+function! ProseMode()
+  call goyo#execute(0, [])
+  set spell noci nosi noai nolist noshowmode noshowcmd
+  set complete+=s
+  set bg=light
+  if !has('gui_running')
+    let g:solarized_termcolors=256
+  endif
+  "colors solarized
+endfunction
+
 function! FormatDiff()
     let l:lines = "all"
     if has('python')
@@ -358,6 +369,7 @@ command! W w
 " Close all buffers except this one
 command! BufCloseOthers %bd|e#
 
+command! ProseMode call ProseMode()
 " Now load specifics to this host
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
