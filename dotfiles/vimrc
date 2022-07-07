@@ -27,7 +27,7 @@ omap = ]
 xmap & [
 xmap = ]
 " TODO figure out what I want from this
-" NERDTreeFind, Goyo, ALE
+" NERDTreeFind
 " Useful macros I use the most
 nmap \A :set formatoptions+=a<CR>:echo "autowrap enabled"<CR>
 nmap \a :set formatoptions-=a<CR>:echo "autowrap disabled"<CR>
@@ -36,6 +36,8 @@ nmap \F :NERDTreeFind<CR>
 nmap \M :set noexpandtab tabstop=8 softtabstop=4 shiftwidth=4<CR>
 " Indent mode 8 chars
 nmap \T :set expandtab tabstop=8 shiftwidth=8 softtabstop=4<CR>
+" enable goyo + movement tzz
+" zz: put current line at the center of the screen keep current column
 nmap \W mt:Goyo<CR>'tzz
 " No C indentation mode and 80 cols and autowrap
 nmap \b :set nocin tw=80<CR>:set formatoptions+=a<CR>
@@ -316,7 +318,7 @@ set tags=./tags,./TAGS,tags,TAGS
 "Something to note: polyglote plugin is changing directory to contain $HOME/.vim// and shortmess to
 "have also +A
 
-"TODO customize status line
+" TODO customize status line
 " For the moment it's never
 if version >=12700
     set statusline=
