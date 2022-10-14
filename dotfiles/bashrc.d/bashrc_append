@@ -1,6 +1,9 @@
 
 # If I have fzf ...
 if [ x$(which fzf) != "x" ]; then
+  # There is 2 parts
+  # one for the tab completion, not sure really how to unlock it but ...
+  # one for the kye binding like ctrl-r ctrl-t
   if [ -f /usr/share/doc/fzf/examples/completion.bash ]; then
     source /usr/share/doc/fzf/examples/completion.bash
   else
@@ -11,11 +14,13 @@ if [ x$(which fzf) != "x" ]; then
   if [ -f /usr/share/doc/fzf/examples/key-bindings.bash ]; then
     source /usr/share/doc/fzf/examples/key-bindings.bash
   fi
+  if [ -f /usr/share/fzf/shell/key-bindings.bash ]; then
+    source /usr/share/fzf/shell/key-binding.bash
+  fi
 
 
   export FZF_DEFAULT_COMMAND='ag --nocolor -g ""'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-  export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND"
   export FZF_DEFAULT_OPTS='
   --color fg:242,bg:236,hl:65,fg+:15,bg+:239,hl+:108
   --color info:108,prompt:109,spinner:108,pointer:168,marker:168
