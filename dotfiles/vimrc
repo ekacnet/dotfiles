@@ -331,7 +331,7 @@ set tags=./tags,./TAGS,tags,TAGS
 
 " TODO customize status line
 " For the moment it's never
-if version >=12700
+if 0 && version >= 700
     set statusline=
     set statusline+=%< " set truncation point everything else is shown even if we
                        " don't have enough space
@@ -351,7 +351,7 @@ if version >=12700
     hi StatusLine  ctermbg=5 cterm=bold
 endif
 
-if version >=700
+if version >= 700
     " Make status line clearer when vsplit is used
     hi StatusLine  ctermbg=5 cterm=bold
 endif
