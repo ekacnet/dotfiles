@@ -57,8 +57,9 @@ for item in * ; do
 done
 popd &>/dev/null
 
-if [ -e $HOME/.bashrc.d/bashrc_append -a $skip_append -eq 0 ]; then
-    cat $HOME/.bashrc.d/bashrc_append >>$HOME/.bashrc
+grep -q ".bashrc.d/bashrc_append" $HOME/.bashrc
+if [ $? -ne 0 ];then
+  echo "source $HOME/.bashrc.d/bashrc_append" >>$HOME/.bashrc
 fi
 
 repos=(
