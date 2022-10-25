@@ -35,15 +35,19 @@ fi
 if [ -e $HOME/.bashrc.d/scm-prompt.sh ]; then
   source $HOME/.bashrc.d/scm-prompt.sh
 else
-  prompt_file1=/usr/lib/git-core/git-sh-prompt
-  prompt_file2=/usr/share/git-core/contrib/completion/git-prompt.sh
-  if [ -e $prompt_file1 ]; then
-    prompt_file=$prompt_file1
-  fi
-  if [ -e $prompt_file2 ]; then
-    prompt_file=$prompt_file2
-  fi
-  source $prompt_file
+  # Have an empty __git_ps1 in case ...
+  function __git_ps1 ()
+  {
+    echo -ne ""
+  }
+  git_prompt_file_1=/usr/lib/git-core/git-sh-prompt
+  git_prompt_file_2=/usr/share/git-core/contrib/completion/git-prompt.sh
+  for prompt_file in $git_prompt_file_1 $git_prompt_file_2; do
+    if [ -e $prompt_file ]; then
+      source $prompt_file
+      break
+    fi
+  done
   function _dotfiles_scm_info ()
   {
     __git_ps1 " (%s)"
