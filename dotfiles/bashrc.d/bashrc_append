@@ -28,7 +28,9 @@ if [ x$(which fzf) != "x" ]; then
 fi
 
 # I always type vi rather than vim ...
-alias vi='vim'
+if [ -n "$(which vim)" ]; then
+  alias vi='vim'
+fi
 
 if [ -e $HOME/.bashrc.d/scm-prompt.sh ]; then
   source $HOME/.bashrc.d/scm-prompt.sh
@@ -71,4 +73,6 @@ function prompt-show-status ()
 source $HOME/.bashrc.d/term_colors
 export PS1="$N[$MC\t$N]──[$MR\u$N@$MB\h$N]:$MG\w $N\$\n\
 └──$N\$(prompt-show-status)$N$MM\$(_dotfiles_scm_info) $N\$ "
-export EDITOR=vim
+if [ -n "$(which vim)" ]; then
+  export EDITOR=vim
+fi
