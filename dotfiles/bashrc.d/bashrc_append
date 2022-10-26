@@ -1,3 +1,7 @@
+# Store a lot of stuff in my history
+
+HISTSIZE=10000
+HISTFILESIZE=20000
 
 # If I have fzf ...
 if [ x$(which fzf) != "x" ]; then
