@@ -85,3 +85,5 @@ export PS1="$TITLE$N[$MC\t$N]──[$MR\u$N@$MB\h$N]:$MG\w $N\$\n\
 if [ -n "$(which vim)" ]; then
   export EDITOR=vim
 fi
+# Do not prepend mosh to window title
+export MOSH_TITLE_NOPREFIX=y
