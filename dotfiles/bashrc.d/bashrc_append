@@ -79,7 +79,8 @@ function prompt-show-status ()
 }
 
 source $HOME/.bashrc.d/term_colors
-export PS1="$N[$MC\t$N]──[$MR\u$N@$MB\h$N]:$MG\w $N\$\n\
+TITLE="\[\e]2;\u@\h: \W\a\]"
+export PS1="$TITLE$N[$MC\t$N]──[$MR\u$N@$MB\h$N]:$MG\w $N\$\n\
 └──$N\$(prompt-show-status)$N$MM\$(_dotfiles_scm_info) $N\$ "
 if [ -n "$(which vim)" ]; then
   export EDITOR=vim
