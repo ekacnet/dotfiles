@@ -347,15 +347,36 @@ if 0 && version >= 700
                                       " Line and Column and Virtual column
     set statusline+=%3P               " Add position in the buffer (top, All, ...)
 
-    " Make status line clearer when vsplit is used
-    hi StatusLine  ctermbg=5 cterm=bold
 endif
 
-if version >= 700
-    " Make status line clearer when vsplit is used
-    hi StatusLine  ctermbg=5 cterm=bold
-endif
+" Things like vim-polyglot are messing up with this when they are forcing the colors
+" to be 16, so let's go ahead and force it before vim-polyglot is doing it.
+" It will avoid having the ctermbg being changed
+set t_Co=16
+set background=dark
 
+" Note color changes need to be after the forcing of t_CO
+" default color scheme is not so great
+
+" Decent colorscheme that works well both in black on white and white on black terminals
+" colors darkblue
+" hi Normal ctermfg=grey ctermbg=black
+
+" colors torte
+" colors koehler
+colors slate
+
+" Make status line clearer when vsplit is used
+hi StatusLine  ctermbg=5 cterm=bold
+
+" The yellowish stuff is not great
+hi Comment ctermfg=LightGreen
+
+" Dark blue better that light blue ?
+hi Search ctermbg=darkblue
+
+" Should I change the inc search ?
+"hi IncSearch ctermbg=red
 
 
 " ----------------------------------------------------------------------------
