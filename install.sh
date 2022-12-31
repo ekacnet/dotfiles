@@ -11,10 +11,6 @@ if [ ! -e $basedir ]; then
 fi
 
 #repourl="git://github.com/statico/dotfiles.git"
-skip_append=0
-if [ -e $HOME/.bashrc.d/bashrc_append ]; then
-  skip_append=1
-fi
 
 function symlink() {
   src="$1"
@@ -44,18 +40,30 @@ function symlink() {
 }
 
 echo "Creating symlinks..."
-pushd $basedir &>/dev/null
-for item in * ; do
-  case "$item" in
-    .|..|.git|*.swp)
-      continue
-      ;;
-    *)
-      symlink "$basedir/$item" "$HOME/.$item"
-      ;;
-  esac
-done
-popd &>/dev/null
+function linkall() {
+  base=$1
+  where=$2
+  pushd $base &>/dev/null
+  for item in * ; do
+    case "$item" in
+      .|..|.git|*.swp)
+        continue
+        ;;
+      *)
+        if [ -f $item ]; then
+          symlink "$base/$item" "$where/.$item"
+        fi
+        if [ -d $item ]; then
+          mkdir $HOME/.$item $where
+          linkall $base/$item $where/.$item
+        fi
+        ;;
+    esac
+  done
+  popd &>/dev/null
+}
+linkall $basedir $where
+
 
 grep -q ".bashrc.d/bashrc_append" $HOME/.bashrc
 if [ $? -ne 0 ];then
