@@ -75,6 +75,7 @@ repos=(
   junegunn/fzf.vim
   mileszs/ack.vim
   sheerun/vim-polyglot
+  w0rp/ale
 )
 
 other_repos=(
