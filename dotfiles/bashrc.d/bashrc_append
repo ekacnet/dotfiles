@@ -19,7 +19,7 @@ if [ x$(which fzf) != "x" ]; then
     source /usr/share/doc/fzf/examples/key-bindings.bash
   fi
   if [ -f /usr/share/fzf/shell/key-bindings.bash ]; then
-    source /usr/share/fzf/shell/key-binding.bash
+    source /usr/share/fzf/shell/key-bindings.bash
   fi
   if [ -f $HOME/.bashrc.d/completion/fzf.bash ]; then
     source $HOME/.bashrc.d/completion/fzf.bash
