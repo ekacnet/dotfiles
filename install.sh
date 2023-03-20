@@ -75,7 +75,11 @@ repos=(
   junegunn/fzf.vim
   mileszs/ack.vim
   sheerun/vim-polyglot
-  w0rp/ale
+  dense-analysis/ale
+  autozimu/LanguageClient-neovim.git
+  Shougo/deoplete.nvim
+  roxma/nvim-yarp
+  roxma/vim-hug-neovim-rpc
 )
 
 other_repos=(
@@ -102,7 +106,6 @@ other_repos=(
   tpope/vim-surround
   tpope/vim-unimpaired
   vim-scripts/openvpn
-  w0rp/ale
   wellle/targets.vim
 
   altercation/vim-colors-solarized

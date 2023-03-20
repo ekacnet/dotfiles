@@ -27,5 +27,6 @@ rm -rf "$dest"
   echo "· Cloned $repo"
   [ "$plugin" = "onehalf" ] && (mv "$dest" "$dest.TEMP" && mv "$dest.TEMP/vim" "$dest" && rm -rf "$dest.TEMP")
   [ "$plugin" = "vim-pathogen" ] && (mv "$dest/autoload/pathogen.vim" "$dir" && rm -rf "$dest")
+  [ "$plugin" = "LanguageClient-neovim" ] && (cd "$dest/LanguageClient-neovim" && ./install.sh)
 ) &
 wait
