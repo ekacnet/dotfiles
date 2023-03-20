@@ -396,9 +396,51 @@ command! ProseMode call ProseMode()
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
 endif
- 
+
+" Which folder to look for lintrc folders
+let s:lintrcfolders = [ ".", expand("~")]
+
+let s:gittop = systemlist('git rev-parse --show-toplevel')
+" Are we in a git repo ?
+if len(s:gittop) > 0
+  if s:gittop[0][0] == "/"
+    " Does it start with a "/" ? if so also look there for lintrc files
+    call extend(s:lintrcfolders, [s:gittop[0]], 0)
+  endif
+endif
+
+" call globpath to get all the paths listed in s:lintrcfolders, ignore well known suffixes
+" like .bak or ~ (3rd option) and return a list (4th parameter)
+let s:lintrcpath = globpath(join(s:lintrcfolders, ","), ".pylintrc", 0, 1)
+if len(s:lintrcpath) > 0
+  " If any match take the first one
+  let g:ale_python_pylint_options = "--rcfile=". s:lintrcpath[0]
+endif
+
+let s:lintrcpath = globpath(join(s:lintrcfolders, ","), ".tox.ini", 0, 1)
+if len(s:lintrcpath) > 0
+  let g:ale_python_flake8_options = "--config ". s:lintrcpath[0]
+endif
+
+
 " Some plugin seems to search for something at startup, so this fixes that.
 silent! nohlsearch
 " Note this is not quite doing what I would like, it's not notifying me if there is already
 " a swapfile because the shortmess being set by polyglot..
 autocmd BufEnter *.md setlocal textwidth=0 | set swapfile | set shortmess-=A
+" cc (ie. gcc/clang) seems to get it pretty wrong with c++ headers so let's get rid of it
+let g:ale_linters_ignore = {
+      \'cpp': ['cc'],
+      \'c': ['cc'],
+      \}
+let g:ale_completion_enabled = 1
+let g:deoplete#enable_at_startup = 1
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+    \ 'python': ['/usr/local/bin/pyls'],
+    \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+    \ 'cpp': ['/usr/bin/ccls'],
+    \ 'c': ['/usr/bin/ccls'],
+    \ }
