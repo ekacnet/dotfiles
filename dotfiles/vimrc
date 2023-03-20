@@ -74,8 +74,10 @@ nmap \z :w<CR>:!open %<CR><CR>
 nmap ; :Buffers<CR>
 nmap <Leader>t :Files<CR>
 nmap <Leader>r :Tags<CR>
-map <C-f> :py3f ~/.vim/clang-format.py<cr>
-imap <C-f> <c-o>:py3f ~/.vim/clang-format.py<cr>
+map <C-c> :call FormatDiff()<CR>
+" Navigate more easily ALE ...
+nmap <silent> <leader>aj :ALENext<cr>
+nmap <silent> <leader>ak :ALEPrevious<cr>
 
 
 nmap <F8> :TagbarToggle<CR>
@@ -174,7 +176,6 @@ function! CurrentFileDir()
    return "e " . expand("%:p:h") . "/"
 endfunction
 
-map <C-c> :call FormatDiff()<CR>
 " Commands to send common keystrokes using tmux
 let g:tmux_console_pane = '0:0.0'
 let g:tmux_server_pane = '0:0.0'
