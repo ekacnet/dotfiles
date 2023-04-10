@@ -2,6 +2,9 @@
 let mapleader = ','
 let g:ackprg = "ag"
 
+" C-?? mapping depending on the mode(s)
+" Insert: C-O execute a command and return to insert mode
+
 " Use pathogen to easily modify the runtime path to include all
 " " plugins under the ~/.vim/bundle directory
 if version >= 700
@@ -115,7 +118,11 @@ nmap <C-l> <C-W>l
 nnoremap <C-w>h :silent call KeepCurrentLine('h')<CR>
 nnoremap <C-w>l :silent call KeepCurrentLine('l')<CR>
 
-" Search for the word under the cursor in the current directory
+" Search for the word under the cursor in the current directory + create a [m]ark named [o] so that
+" we can return to the original location, nb: we need to have a ":" to enter in command mode and
+" type the function name (Ack, ...)
+" ! to not jump to the first result, see make command documentation
+" \b: word boundary end
 nmap <M-S-k>  mo:Ggrep! "\b<cword>\b" <CR>
 nmap <Esc>K   mo:Ggrep! "\b<cword>\b" <CR>
 nmap <M-k>    mo:Ack! "\b<cword>\b" <CR>
@@ -235,7 +242,7 @@ autocmd BufReadPost *.pdf exec "%s/[^[:alnum:][:punct:][:space:]]//g"
 " '" is how to get this address, of course we need to escape this when calling functions like line()
 " or execute so "'\""
 " Note ' or ` is the same, and using g' over just ' means that the jump list is not changed
-" So with the autocmd if the mark " is set then go to this mark: g'" but 
+" So with the autocmd if the mark " is set then go to this mark: g'" but
 " but because this part of an exe we need to escape it
 " It's basically to allow to go back to the last position in the file when
 " the file has been read
@@ -383,7 +390,7 @@ hi Search ctermbg=darkblue
 " ----------------------------------------------------------------------------
 " CUSTOM COMMANDS
 " ----------------------------------------------------------------------------
-
+" NB: command! force the command to be redefined if it exist
 " I always hit ":W" instead of ":w" because I linger on the shift key...
 command! Q q
 command! W w
