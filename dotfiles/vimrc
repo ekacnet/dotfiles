@@ -447,9 +447,9 @@ if 0 && version >= 700
 endif
 
 " Things like vim-polyglot are messing up with this when they are forcing the colors
-" to be 16, so let's go ahead and force it before vim-polyglot is doing it.
-" It will avoid having the ctermbg being changed
-set t_Co=16
+" to be 16 if you had 8, so let's go ahead and force it before vim-polyglot is doing it.
+" It will avoid having the ctermbg being changed, also let's go big and set it to 256 colors
+set t_Co=256
 set background=dark
 
 " Note color changes need to be after the forcing of t_CO
