@@ -123,10 +123,12 @@ nnoremap <C-w>l :silent call KeepCurrentLine('l')<CR>
 " type the function name (Ack, ...)
 " ! to not jump to the first result, see make command documentation
 " \b: word boundary end
-nmap <M-S-k>  mo:Ggrep! "\b<cword>\b" <CR>
-nmap <Esc>K   mo:Ggrep! "\b<cword>\b" <CR>
-nmap <M-k>    mo:Ack! "\b<cword>\b" <CR>
-nmap <Esc>k   mo:Ack! "\b<cword>\b" <CR>
+nmap <M-K>    mo:GGrepw! \b<cword>\b<CR>
+nmap <Esc>K   mo:GGrepw! \b<cword>\b<CR>
+"Prefer GGrep over Ggrep from vim-fugitive, also vim-fugitive is not dealing with \b markers
+"nmap <Esc>K   :Ggrep -q "<cword>" <CR>
+nmap <M-k>    mo:Ack! "\b<cword>\b"<CR>
+nmap <Esc>k   mo:Ack! "\b<cword>\b"<CR>
 
 " Alt-W to delete a buffer and remove it from the list but keep the window via bufkill.vim
 nmap <Esc>w :BD<CR>
@@ -206,6 +208,62 @@ function! KeepCurrentLine(motion)
   if &diff
     call cursor(theLine, theCol)
   endif
+endfunction
+
+" expand %, # and < based special characters
+" needed when you don't call some function like grep and what not that will do the translation
+function! ExpandString(string)
+  let str = a:string
+  for c in ["%", "#", "<"]
+    if c == "%"
+      let str = substitute(str, "%", expand("%"), "g")
+    endif
+    if c == "#"
+      let str = substitute(str, '\(#\d*\)', '\=expand(submatch(1))', "g")
+    endif
+    if c == "<"
+      let str = substitute(str, '\(<.*>\)', '\=expand(submatch(1))', "g")
+    endif
+  endfor
+  return str
+endfunction
+
+" Can't call directly GGrep with things like <cword> or \b<cword>\b as they are not extrapolated
+" the goal of this function is extrapolate/expand them as it would happen with the vim grep command
+function! GGrepwrapper(bang, args)
+  if empty(a:args)
+    let words = expand("<cword>")
+  else
+    let words_list = [ ExpandString(a:args) ]
+    for w in a:000
+      let words_list = add(words_list, ExpandString(w))
+    endfor
+    let words = join(words_list, ' ')
+  endif
+  " Note because we have both the function and the command, calling without the call will call the
+  " command not the function and the parameters are not expanded but passed as is
+  "Also not passing bang to GGrep because I don't want it full screen
+  call GGrep("", words)
+endfunction
+
+function GGrep(bang, words)
+  if a:bang == "!"
+    let fullscreen = 1
+  else
+    let fullscreen = 0
+  endif
+  " Leverage fzf to do Git Grep
+  " - The second argument to `fzf#vim#grep` is 0 (false), because `git grep` does
+  " not print column numbers.
+  " - We set the base directory to git root by setting `dir` attribute in spec
+  " dictionary.
+
+  " <bang> when calling function will translate to the ! char, so if included in a
+  " string it will be concatenated, for instance foo<bang> will give foo!, if it's a integer
+  " then it will negate it's value ie. <bang>0 becomes !0 or 1 if the command was called with bang
+  call fzf#vim#grep(
+        \ 'git grep --line-number -- '.shellescape(a:words), 0,
+        \ fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), fullscreen)
 endfunction
 
 " Create a group for autocmd ?
@@ -399,6 +457,9 @@ command! W w
 command! BufCloseOthers %bd|e#
 
 command! ProseMode call ProseMode()
+
+command! -bang -nargs=* GGrep    call GGrep('<bang>', '<q-args>')
+command! -bang -nargs=* GGrepw   call GGrepwrapper('<bang>', <q-args>)
 " Now load specifics to this host
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
