@@ -129,6 +129,11 @@ nmap <Esc>K   mo:GGrepw! \b<cword>\b<CR>
 "nmap <Esc>K   :Ggrep -q "<cword>" <CR>
 nmap <M-k>    mo:Ack! "\b<cword>\b"<CR>
 nmap <Esc>k   mo:Ack! "\b<cword>\b"<CR>
+"<C-U> remove the visual range
+vmap <Esc>k   mo:<C-U>VAck!<CR>
+vmap <M-k>    mo:<C-U>VAck!<CR>
+vmap <Esc>K   mo:<C-U>VGGrep!<CR>
+vmap <M-K>    mo:<C-U>VGGrep!<CR>
 
 " Alt-W to delete a buffer and remove it from the list but keep the window via bufkill.vim
 nmap <Esc>w :BD<CR>
@@ -148,6 +153,31 @@ cnoremap w!! %!sudo tee > /dev/null %
 
 " Functions
 " ! to override
+function! GetVisualSelection(delim)
+    " Why is this not a built-in Vim script function?!
+    let [line_start, column_start] = getpos("'<")[1:2]
+    let [line_end, column_end] = getpos("'>")[1:2]
+    let lines = getline(line_start, line_end)
+    if len(lines) == 0
+        return ''
+    endif
+    let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
+    let lines[0] = lines[0][column_start - 1:]
+    return join(lines, a:delim)
+endfunction
+
+function! VGGrepfunc(bang)
+  let words = GetVisualSelection(" ")
+  let words = substitute(words, '\([().[\]]\)', '\\\1',"g")
+  call GGrep(a:bang, words)
+endfunction
+
+function! VAckfunc(cmd)
+  let words = GetVisualSelection(" ")
+  let words = substitute(words, '\([().[\]]\)', '\\\1',"g")
+  call ack#Ack(a:cmd, '"'.words.'"')
+endfunction
+
 function! ProseMode()
   call goyo#execute(0, [])
   set spell noci nosi noai nolist noshowmode noshowcmd
@@ -460,6 +490,9 @@ command! ProseMode call ProseMode()
 
 command! -bang -nargs=* GGrep    call GGrep('<bang>', '<q-args>')
 command! -bang -nargs=* GGrepw   call GGrepwrapper('<bang>', <q-args>)
+command! -bang VGGrep            call VGGrepfunc('<bang>')
+" argument to VAckfunc will be grep or grep! depending how Vack is called
+command! -bang VAck              call VAckfunc('grep<bang>')
 " Now load specifics to this host
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
