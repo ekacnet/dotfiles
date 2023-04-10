@@ -426,23 +426,23 @@ set tags=./tags,./TAGS,tags,TAGS
 "Something to note: polyglote plugin is changing directory to contain $HOME/.vim// and shortmess to
 "have also +A
 
-" TODO customize status line
 " For the moment it's never
-if 0 && version >= 700
+if version >= 700
     set statusline=
-    set statusline+=%< " set truncation point everything else is shown even if we
-                       " don't have enough space
-    set statusline+=%f%m%r "full path + modification marker (%m) + mode (%r)
-    set statusline+=%11(buffer:%.3n%)  "buffer number, make everything fit in 11 chars
-                                       "start abreviating buffers that have
-                                       "more than 3 digit (>100)
-    set statusline+=\ %#warningmsg#
-    set statusline+=%{SyntasticStatuslineFlag()}
-    set statusline+=%*\
+    set statusline+=%<                 " set truncation point everything else is shown even if we
+                                       " don't have enough space
+    set statusline+=%f%m%r             " full path + modification marker (%m) + mode (%r)
+    set statusline+=%11(buffer:%.4n%)  " buffer number, make everything fit in 11 chars
+                                       " start abreviating buffers that have
+                                       " more than 4 digits (>1000)
+    set statusline+=\ %#warningmsg#    " Set highlight group %#...# called warninmsg
+    " As of 2023 don't use Syntastic anymore but ALE so there is no point to use it
+    "set statusline+=%{SyntasticStatuslineFlag()}
+    set statusline+=%*\                " %* bringrs the highlighting to what was before
 
     set statusline+=%15(L%l,C%c%V%)\  " %15( is the width specification, ends with %)
                                       " Line and Column and Virtual column
-    set statusline+=%3P               " Add position in the buffer (top, All, ...)
+    set statusline+=%3P               " Add position in the buffer (top, All or pct)
 
 endif
 
