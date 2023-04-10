@@ -216,12 +216,13 @@ function! CurrentFileDir()
 endfunction
 
 " Commands to send common keystrokes using tmux
-let g:tmux_console_pane = '0:0.0'
-let g:tmux_server_pane = '0:0.0'
+" +1 aka next pane
+let g:tmux_console_pane = '+1'
+let g:tmux_server_pane = '+1'
 
 function! TmuxPaneRepeat()
   write
-  silent execute ':!tmux send-keys -t' g:tmux_console_pane 'C-p' 'C-j'
+  silent execute ':!tmux send-keys -t' g:tmux_console_pane 'Up' 'C-j'
   redraw!
 endfunction
 
