@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 { # This ensures the entire script is downloaded.
-
+update_plugins=${1-1}
 set -eo pipefail
 
 # Assume that install.sh is in the same folder that the one that contains dotfiles
@@ -41,28 +41,33 @@ function symlink() {
 
 echo "Creating symlinks..."
 function linkall() {
-  base=$1
-  where=$2
+  local base=$1
+  local where=$2
   pushd $base &>/dev/null
-  for item in * ; do
+  for item in $(dir -1) ; do
     case "$item" in
       .|..|.git|*.swp)
         continue
         ;;
       *)
+        if [ "$where" != "$HOME" ]; then
+          dest="$where/$item"
+        else
+          dest="$where/.$item"
+        fi
         if [ -f $item ]; then
-          symlink "$base/$item" "$where/.$item"
+            symlink "$base/$item" $dest
         fi
         if [ -d $item ]; then
-          mkdir $HOME/.$item $where
-          linkall $base/$item $where/.$item
+          test -e $dest || mkdir -p $dest
+          linkall $base/$item $dest
         fi
         ;;
     esac
   done
   popd &>/dev/null
 }
-linkall $basedir $where
+linkall $basedir $HOME
 
 
 grep -q ".bashrc.d/bashrc_append" $HOME/.bashrc
@@ -118,7 +123,7 @@ other_repos=(
 )
 
 vim_update=$HOME/.vim/bin/update.sh
-if [ -x $vim_update ]; then
+if [ $update_plugins -eq 1 ] && [ -x $vim_update ]; then
   echo "Setting up vim plugins..."
 
   for repo in ${repos[@]}; do
@@ -126,8 +131,11 @@ if [ -x $vim_update ]; then
   done
 
 fi
-
-if [ which tmux >/dev/null 2>&1 ] && [ -e $HOME/.tmux ] ; then
+set +e
+tmp_path=$(grep TMUX_PLUGIN_MANAGER_PATH $HOME/.tmux.conf)
+set -e
+which tmux &>/dev/null
+if [ $? -eq 0 ] && [ -e $HOME/.tmux ] && [ x"$tmp_path" != x"" ]; then
   echo "Setting up tmux..."
   tpm="$HOME/.tmux/plugins/tpm"
   if [ -e "$tpm" ]; then
@@ -164,7 +172,7 @@ if which clang-format >/dev/null 2>&1; then
     clang_format=$(rpm -ql clang-format 2>&1|grep clang-format.py |head -1)
   fi
   if [ "a$clang_format" != "a" -a -e $clang_format ]; then
-    ln -s $clang_format "$HOME/.vim/bin"
+    ln -fs $clang_format "$HOME/.vim/bin"
   fi
 fi
 
