@@ -85,6 +85,7 @@ repos=(
   Shougo/deoplete.nvim
   roxma/nvim-yarp
   roxma/vim-hug-neovim-rpc
+  tpope/vim-dispatch
 )
 
 other_repos=(
