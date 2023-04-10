@@ -93,3 +93,4 @@ if [ -n "$(which vim)" ]; then
 fi
 # Do not prepend mosh to window title
 export MOSH_TITLE_NOPREFIX=y
+export PATH=$PATH:$HOME/bin
