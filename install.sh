@@ -44,7 +44,7 @@ function linkall() {
   local base=$1
   local where=$2
   pushd $base &>/dev/null
-  for item in $(dir -1) ; do
+  for item in $(\ls -1) ; do
     case "$item" in
       .|..|.git|*.swp)
         continue
@@ -69,9 +69,13 @@ function linkall() {
 }
 linkall $basedir $HOME
 
-
-grep -q ".bashrc.d/bashrc_append" $HOME/.bashrc
-if [ $? -ne 0 ];then
+if [ -f $HOME/.bashrc ]; then
+  grep -q ".bashrc.d/bashrc_append" $HOME/.bashrc
+  ret=$?
+else
+  ret=1
+fi
+if [ $ret -ne 0 ];then
   echo "source $HOME/.bashrc.d/bashrc_append" >>$HOME/.bashrc
 fi
 
