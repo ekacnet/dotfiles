@@ -27,6 +27,12 @@ if [ x$(which fzf) != "x" ]; then
   if [ -f $HOME/.bashrc.d/completion/fzf-key-bindings.bash ]; then
     source $HOME/.bashrc.d/completion/fzf-key-bindings.bash
   fi
+  if [ -f /opt/homebrew/opt/fzf/shell/completion.bash ]; then
+    source /opt/homebrew/opt/fzf/shell/completion.bash
+  fi
+  if [ -f /opt/homebrew/opt/fzf/shell/key-bindings.bash ]; then
+    source /opt/homebrew/opt/fzf/shell/key-bindings.bash
+  fi
 
 
   export FZF_DEFAULT_COMMAND='ag --nocolor -g ""'
