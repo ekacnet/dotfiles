@@ -62,6 +62,7 @@ nmap \p :ProseMode<CR>
 nmap \q :nohlsearch<CR>
 " repeat the last command in the other tmux pane
 nmap \r :call TmuxPaneRepeat()<CR>
+nmap ùr :call TmuxPaneRepeat()<CR>
 " Enable spellchecker in the current buffer
 nmap \s :setlocal invspell<CR>
 " set to expandtab, ts=4,sw=4,sts=4
