@@ -536,6 +536,7 @@ let g:ale_linters_ignore = {
       \'cpp': ['cc'],
       \'c': ['cc'],
       \}
+let g:ale_fix_on_save = 1
 let g:ale_completion_enabled = 1
 let g:deoplete#enable_at_startup = 1
 let g:LanguageClient_serverCommands = {
@@ -547,3 +548,27 @@ let g:LanguageClient_serverCommands = {
     \ 'cpp': ['/usr/bin/ccls'],
     \ 'c': ['/usr/bin/ccls'],
     \ }
+" Add fixer for python on python filetypes
+autocmd FileType python let g:ale_fixers = {
+    \   'python': ['black'],
+    \}
+autocmd FileType python let g:ale_linters = {
+    \   'python': ['flake8', 'pylsp'],
+    \}
+" Enable the use of dispatch to do search
+let g:ack_use_dispatch = 1
+let g:ale_python_pylsp_executable = 'pyls'
+let g:ale_python_pylsp_config =
+      \ {
+      \   'pyls': {
+      \     'plugins': {
+      \       'pycodestyle': {
+      \         'enabled': v:false
+      \       },
+      \       'pyflakes': {
+      \         'enabled': v:false
+      \       }
+      \     }
+      \   },
+      \ }
+let g:ale_python_pylsp_options = '--log-file /tmp/log_pyls'
