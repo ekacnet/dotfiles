@@ -107,5 +107,7 @@ fi
 
 # Bash 4.2 and above try to add a \ before variables when "tabbing" a path with a variable
 # shopt -s direxpand could be used and revert to 4.1 behavior where TAB would expand the variable
+# Note on 8/16/2023 this is also having a nasty side effect of disabling custom completes commands
+#shopt -u progcomp
 shopt -s progcomp
 shopt -s direxpand 2>/dev/null
