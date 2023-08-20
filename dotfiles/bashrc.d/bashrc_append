@@ -6,26 +6,21 @@ HISTFILESIZE=20000
 # If I have fzf ...
 if [ x$(which fzf) != "x" ]; then
   # There is 2 parts
-  # one for the tab completion, not sure really how to unlock it but ...
-  # one for the kye binding like ctrl-r ctrl-t
-  if [ -f /usr/share/doc/fzf/examples/completion.bash ]; then
-    source /usr/share/doc/fzf/examples/completion.bash
-  else
-    if [ -f /usr/share/bash-completion/completions/fzf ]; then
-      source /usr/share/bash-completion/completions/fzf
-    fi
-  fi
-  if [ -f /usr/share/doc/fzf/examples/key-bindings.bash ]; then
-    source /usr/share/doc/fzf/examples/key-bindings.bash
-  fi
-  if [ -f /usr/share/fzf/shell/key-bindings.bash ]; then
-    source /usr/share/fzf/shell/key-bindings.bash
-  fi
+  # one for the tab completion
   if [ -f $HOME/.bashrc.d/completion/fzf.bash ]; then
     source $HOME/.bashrc.d/completion/fzf.bash
+  elif [ -f /usr/share/doc/fzf/examples/completion.bash ]; then
+    source /usr/share/doc/fzf/examples/completion.bash
+  elif [ -f /usr/share/bash-completion/completions/fzf ]; then
+      source /usr/share/bash-completion/completions/fzf
   fi
+  # one for the key binding like ctrl-r ctrl-t
   if [ -f $HOME/.bashrc.d/completion/fzf-key-bindings.bash ]; then
     source $HOME/.bashrc.d/completion/fzf-key-bindings.bash
+  elif [ -f /usr/share/doc/fzf/examples/key-bindings.bash ]; then
+    source /usr/share/doc/fzf/examples/key-bindings.bash
+  elif [ -f /usr/share/fzf/shell/key-bindings.bash ]; then
+    source /usr/share/fzf/shell/key-bindings.bash
   fi
   if [ -f /opt/homebrew/opt/fzf/shell/completion.bash ]; then
     source /opt/homebrew/opt/fzf/shell/completion.bash
