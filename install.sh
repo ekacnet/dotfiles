@@ -69,12 +69,14 @@ function linkall() {
 }
 linkall $basedir $HOME
 
-if [ -f $HOME/.bashrc ]; then
+set +e
+if [ -e $HOME/.bashrc ]; then
   grep -q ".bashrc.d/bashrc_append" $HOME/.bashrc
   ret=$?
 else
   ret=1
 fi
+set -e
 if [ $ret -ne 0 ];then
   echo "source $HOME/.bashrc.d/bashrc_append" >>$HOME/.bashrc
 fi
