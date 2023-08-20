@@ -95,6 +95,15 @@ fi
 # Do not prepend mosh to window title
 export MOSH_TITLE_NOPREFIX=y
 export PATH=$PATH:$HOME/bin
+# Fix SSH auth socket location so agent forwarding works with tmux.
+TARGET=~/.ssh/ssh_auth_sock
+if [ -n "$TMUX" ]; then
+  export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+else
+  if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$TARGET" ] ; then
+        ln -sf $SSH_AUTH_SOCK $TARGET
+  fi
+fi
 
 # Bash 4.2 and above try to add a \ before variables when "tabbing" a path with a variable
 # shopt -s direxpand could be used and revert to 4.1 behavior where TAB would expand the variable
