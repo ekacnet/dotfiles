@@ -128,8 +128,8 @@ nmap <M-K>    mo:GGrepw! \b<cword>\b<CR>
 nmap <Esc>K   mo:GGrepw! \b<cword>\b<CR>
 "Prefer GGrep over Ggrep from vim-fugitive, also vim-fugitive is not dealing with \b markers
 "nmap <Esc>K   :Ggrep -q "<cword>" <CR>
-nmap <M-k>    mo:Ack! "\b<cword>\b"<CR>
-nmap <Esc>k   mo:Ack! "\b<cword>\b"<CR>
+nmap <M-k>    mo:Sack! "\b<cword>\b"<CR>
+nmap <Esc>k   mo:Sack! "\b<cword>\b"<CR>
 "<C-U> remove the visual range
 vmap <Esc>k   mo:<C-U>VAck!<CR>
 vmap <M-k>    mo:<C-U>VAck!<CR>
@@ -170,13 +170,25 @@ endfunction
 function! VGGrepfunc(bang)
   let words = GetVisualSelection(" ")
   let words = substitute(words, '\([().[\]]\)', '\\\1',"g")
-  call GGrep(a:bang, words)
+  if len(words) > 2
+    call GGrep(a:bang, words)
 endfunction
 
 function! VAckfunc(cmd)
   let words = GetVisualSelection(" ")
   let words = substitute(words, '\([().[\]]\)', '\\\1',"g")
-  call ack#Ack(a:cmd, '"'.words.'"')
+  if len(words) > 2
+    call ack#Ack(a:cmd, '"'.words.'"')
+  endif
+endfunction
+
+" "Safe" version of Ack! that don't run even if it's just a quote or a semicolon
+function! Sackfunc(cmd, args)
+  " we usually call this function with "\b<real_term>\b" so there is at least 6
+  " chars no matter what let's trigger a search only if we have more than 3 letters
+  if len(a:args) > 9
+    call ack#Ack(a:cmd, a:args)
+  endif
 endfunction
 
 function! ProseMode()
@@ -495,6 +507,7 @@ command! -bang -nargs=* GGrepw   call GGrepwrapper('<bang>', <q-args>)
 command! -bang VGGrep            call VGGrepfunc('<bang>')
 " argument to VAckfunc will be grep or grep! depending how Vack is called
 command! -bang VAck              call VAckfunc('grep<bang>')
+command! -bang -nargs=* -complete=file Sack           call Sackfunc('grep<bang>', <q-args>)
 " Now load specifics to this host
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
