@@ -361,6 +361,8 @@ autocmd BufReadPost *
         \ endif
 autocmd BufWinEnter COMMIT_EDITMSG,*.diff,*.patch,*.patches.txt call CommitMessages()
 
+au BufNewFile,BufRead *.sls,Saltfile set ft=yaml
+
 " augroup END
 
 " ----------------------------------------------------------------------------
