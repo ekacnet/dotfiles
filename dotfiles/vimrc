@@ -144,9 +144,10 @@ nmap <M-w>  :BD<CR>
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
-" Typing `$c` on the command line expands to `:e` + the current path, so it's easy to edit a file in
+" Typing `$c` on the command line expands to the current path, so it's easy to edit a file in
 " the same directory as the current file.
-cnoremap $c e <C-\>eCurrentFileDir()<CR>
+" Note: <C-\>e execute the function after it
+cnoremap $c <C-\>eCurrentFileDir()<CR>
 
 " in case you forgot to sudo, typing w!! in command mode will force the file to be written
 " through sudo + tee
@@ -225,7 +226,13 @@ function! CommitMessages()
 endf
 
 function! CurrentFileDir()
-   return "e " . expand("%:p:h") . "/"
+  let cmd = getcmdline()
+  if len(cmd) == 0
+    let cmd = "e"
+  endif
+  let cmd = cmd .. " " .. expand("%:p:h") .. "/"
+  call setcmdpos(strlen(cmd) + 1)
+  return cmd
 endfunction
 
 " Commands to send common keystrokes using tmux
