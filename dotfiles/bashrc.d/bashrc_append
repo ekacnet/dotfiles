@@ -12,7 +12,7 @@ if [ x$(which fzf) != "x" ]; then
   elif [ -f /usr/share/doc/fzf/examples/completion.bash ]; then
     source /usr/share/doc/fzf/examples/completion.bash
   elif [ -f /usr/share/bash-completion/completions/fzf ]; then
-      source /usr/share/bash-completion/completions/fzf
+    source /usr/share/bash-completion/completions/fzf
   fi
   # one for the key binding like ctrl-r ctrl-t
   if [ -f $HOME/.bashrc.d/completion/fzf-key-bindings.bash ]; then
