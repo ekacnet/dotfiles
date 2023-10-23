@@ -583,6 +583,7 @@ let g:LanguageClient_serverCommands = {
     \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
     \ 'cpp': ['/usr/bin/ccls'],
     \ 'c': ['/usr/bin/ccls'],
+    \ 'go': ['gopls'],
     \ }
 " Add fixer for python on python filetypes
 autocmd FileType python let g:ale_fixers = {
@@ -590,7 +591,7 @@ autocmd FileType python let g:ale_fixers = {
     \}
 let g:ale_fixers = {
     \   'python': ['black'],
-    \   'go':     ['gofmt'],
+    \   'go':     ['goimports','gofmt'],
     \   'bzl':    ['buildifier'],
     \   'terraform':    ['terraform'],
     \}
