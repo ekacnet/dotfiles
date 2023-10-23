@@ -90,6 +90,37 @@ function prompt-show-status ()
   return 0
 }
 
+function add_to_path ()
+{
+    new_path=""
+    dir_to_add="$1"
+    prepend=${2:-1}
+    IFS=':' read -r -a paths<<< "$PATH"
+    i=0
+    for p in "${paths[@]}"; do
+      echo "$new_path" | grep -q -E "(^|:)$p($|:)"
+      if [ "$?" -ne 0 ]; then
+        if [ $i -eq 0 ]; then
+          i=$((i + 1))
+          new_path="$p"
+        else
+          i=$((i + 1))
+          new_path="$new_path:$p"
+        fi
+      fi
+    done
+
+    echo "$new_path" | grep -q -E "(^|:)$dir_to_add($|:)"
+    if [ "$?" -ne 0 ]; then
+      if [ "$prepend" -eq 1 ]; then
+        new_path="$dir_to_add:$new_path"
+      else
+        new_path="$new_path:$dir_to_add"
+      fi
+    fi
+    echo "$new_path"
+}
+
 source $HOME/.bashrc.d/term_colors
 TITLE="\[\e]2;\u@\h: \W\a\]"
 export PS1="$TITLE$N[$MC\t$N]──[$MR\u$N@$MB\h$N]:$MG\w $N\$\n\
@@ -99,7 +130,7 @@ if [ -n "$(which vim)" ]; then
 fi
 # Do not prepend mosh to window title
 export MOSH_TITLE_NOPREFIX=y
-export PATH=$PATH:$HOME/bin
+export PATH=$(add_to_path "$HOME/bin"  0)
 # Fix SSH auth socket location so agent forwarding works with tmux.
 TARGET=~/.ssh/ssh_auth_sock
 if [ -n "$TMUX" ]; then
@@ -121,3 +152,5 @@ fi
 #shopt -u progcomp
 shopt -s progcomp
 shopt -s direxpand 2>/dev/null
+export HISTSIZE=100000
+export HISTFILESIZE=200000
