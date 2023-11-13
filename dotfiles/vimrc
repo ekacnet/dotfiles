@@ -524,10 +524,6 @@ command! -bang VGGrep            call VGGrepfunc('<bang>')
 " argument to VAckfunc will be grep or grep! depending how Vack is called
 command! -bang VAck              call VAckfunc('grep<bang>')
 command! -bang -nargs=* -complete=file Sack           call Sackfunc('grep<bang>', <q-args>)
-" Now load specifics to this host
-if filereadable(expand("~/.vimrc.local"))
-  source ~/.vimrc.local
-endif
 
 " Which folder to look for lintrc folders
 let s:lintrcfolders = [ ".", expand("~")]
@@ -621,3 +617,9 @@ let g:ale_python_pylsp_config =
       \   },
       \ }
 let g:ale_python_pylsp_options = '--log-file /tmp/log_pyls'
+
+" This needs to be at the and obviously
+" Now load specifics to this host
+if filereadable(expand("~/.vimrc.local"))
+  source ~/.vimrc.local
+endif
