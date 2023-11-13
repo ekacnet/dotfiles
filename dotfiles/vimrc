@@ -153,6 +153,14 @@ cnoremap $c <C-\>eCurrentFileDir()<CR>
 " through sudo + tee
 cnoremap w!! %!sudo tee > /dev/null %
 
+
+" Get details on the variable/function under the cursor
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+" Go to definition
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+" Rename
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
 " Functions
 " ! to override
 function! GetVisualSelection(delim)
