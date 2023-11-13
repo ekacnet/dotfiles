@@ -361,7 +361,14 @@ autocmd BufReadPost *
         \ endif
 autocmd BufWinEnter COMMIT_EDITMSG,*.diff,*.patch,*.patches.txt call CommitMessages()
 
-au BufNewFile,BufRead *.sls,Saltfile set ft=yaml
+" Fallback to yaml if a sls file is not detected as python or sls
+function!  FallbackSalt()
+  let fts = ['sls', 'python']
+  if index(fts, &filetype) == -1
+    set ft=yaml
+  endif
+endfunction
+au BufNewFile,BufRead *.sls,Saltfile call FallbackSalt()
 
 " augroup END
 
