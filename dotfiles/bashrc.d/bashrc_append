@@ -1,10 +1,7 @@
 # Store a lot of stuff in my history
 
-HISTSIZE=10000
-HISTFILESIZE=20000
-HISTCONTROL=ignoreboth
 # don't add simple commands like ls, bg/fg ... and the one starting with a ' ' in the history file
-HISTIGNORE="ls:[bf]g:exit:pwd:clear:mount:umount:[ \t]*"
+export HISTIGNORE="ls:bg:fg:exit:pwd:clear:mount:umount:^ *"
 
 # If I have fzf ...
 if [ x$(which fzf) != "x" ]; then
@@ -152,5 +149,6 @@ fi
 #shopt -u progcomp
 shopt -s progcomp
 shopt -s direxpand 2>/dev/null
-export HISTSIZE=100000
-export HISTFILESIZE=200000
+export HISTSIZE=10000
+export HISTFILESIZE=20000
+export HISTCONTROL=ignoreboth
