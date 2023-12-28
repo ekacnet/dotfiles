@@ -233,12 +233,21 @@ function! CommitMessages()
     exe ":1"
 endf
 
+function! EndsWith(longer, shorter) abort
+    return a:longer[len(a:longer)-len(a:shorter):] ==# a:shorter
+endfunction
+
 function! CurrentFileDir()
   let cmd = getcmdline()
   if len(cmd) == 0
-    let cmd = "e"
+    let cmd = "e "
   endif
-  let cmd = cmd .. " " .. expand("%:p:h") .. "/"
+  if EndsWith(cmd, '(')
+    let prefix = "'"
+  else
+    let prefix = ''
+  endif
+  let cmd = cmd .. prefix .. expand("%:p:h") .. "/"
   call setcmdpos(strlen(cmd) + 1)
   return cmd
 endfunction
