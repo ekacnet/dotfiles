@@ -592,49 +592,64 @@ let g:deoplete#enable_at_startup = 1
 " No matter what the documentation says the effect of noinsert is to highlight what deoplete put
 " first so that pressing return would just complete
 set completeopt=menu,noinsert
+
+let s:pylsp_options = {
+  \   'pylsp': {
+  \     'plugins': {
+  \       'pycodestyle': {
+  \         'enabled': v:false
+  \       },
+  \       'pyflakes': {
+  \         'enabled': v:false
+  \       }
+  \     }
+  \   },
+  \}
+
+" Allow to debug LanguageClient
+"let g:LanguageClient_loggingLevel = 'INFO'
+"let g:LanguageClient_useVirtualText = 'CodeLens'
+"let g:LanguageClient_loggingFile = expand('~/LanguageClient.log')
+"let g:LanguageClient_serverStderr = expand('~/LanguageServer.log')
 let g:LanguageClient_serverCommands = {
-    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
-    \ 'python': ['/usr/local/bin/pyls'],
-    \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-    \ 'cpp': ['/usr/bin/ccls'],
-    \ 'c': ['/usr/bin/ccls'],
-    \ 'go': ['gopls'],
-    \ }
+  \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+  \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+  \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+  \ 'python': {
+  \   'name': 'pylsp',
+  \   'command': ['/usr/local/bin/pylsp'],
+  \   'commanddebug': ['/usr/local/bin/pylsp', '-v', '--log-file', '/tmp/'..$USER..'-lc_pylsp.log'],
+  \   'initializationOptions': s:pylsp_options,
+  \ },
+  \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+  \ 'cpp': ['/usr/bin/ccls'],
+  \ 'c': ['/usr/bin/ccls'],
+  \ 'go': ['gopls'],
+  \ }
+
 " Add fixer for python on python filetypes
-autocmd FileType python let g:ale_fixers = {
-    \   'python': ['black'],
-    \}
 let g:ale_fixers = {
-    \   'python': ['black'],
-    \   'go':     ['goimports','gofmt'],
-    \   'bzl':    ['buildifier'],
-    \   'terraform':    ['terraform'],
-    \}
+  \   'python':       ['black', 'isort'],
+  \   'go':           ['goimports','gofmt'],
+  \   'bzl':          ['buildifier'],
+  \   'terraform':    ['terraform'],
+  \}
+
 autocmd FileType go let g:ale_linters = {
-    \   'go': ['gofmt', 'gopls', 'govet'],
-    \}
+  \   'go': ['gofmt', 'gopls', 'govet'],
+  \}
+
 autocmd FileType python let g:ale_linters = {
-    \   'python': ['flake8', 'pylsp', 'black'],
-    \}
+  \   'python': ['flake8', 'pylsp'],
+  \}
+
 " Enable the use of dispatch to do search
 let g:ack_use_dispatch = 1
-let g:ale_python_pylsp_executable = 'pyls'
-let g:ale_python_pylsp_config =
-      \ {
-      \   'pyls': {
-      \     'plugins': {
-      \       'pycodestyle': {
-      \         'enabled': v:false
-      \       },
-      \       'pyflakes': {
-      \         'enabled': v:false
-      \       }
-      \     }
-      \   },
-      \ }
-let g:ale_python_pylsp_options = '--log-file /tmp/log_pyls'
+let g:ale_python_pylsp_executable = 'pylsp'
+let g:ale_python_pylsp_config = s:pylsp_options
+
+" To debug
+" let g:ale_python_pylsp_options = '-v --log-file /tmp/'..$USER..'-ale_pylsp.log'
 
 " This needs to be at the and obviously
 " Now load specifics to this host
