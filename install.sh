@@ -83,6 +83,8 @@ fi
 
 repos=(
   tpope/vim-pathogen
+  tpope/vim-dispatch
+  tpope/vim-unimpaired
   junegunn/fzf.vim
   mileszs/ack.vim
   sheerun/vim-polyglot
@@ -91,7 +93,7 @@ repos=(
   Shougo/deoplete.nvim
   roxma/nvim-yarp
   roxma/vim-hug-neovim-rpc
-  tpope/vim-dispatch
+  prabirshrestha/vim-lsp
 )
 
 other_repos=(
@@ -116,7 +118,6 @@ other_repos=(
   tpope/vim-rhubarb
   tpope/vim-sleuth
   tpope/vim-surround
-  tpope/vim-unimpaired
   vim-scripts/openvpn
   wellle/targets.vim
 
