@@ -617,8 +617,8 @@ let g:LanguageClient_serverCommands = {
   \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
   \ 'python': {
   \   'name': 'pylsp',
-  \   'command': ['/usr/local/bin/pylsp'],
-  \   'commanddebug': ['/usr/local/bin/pylsp', '-v', '--log-file', '/tmp/'..$USER..'-lc_pylsp.log'],
+  \   'command': ['/usr/bin/pylsp'],
+  \   'commanddebug': ['pylsp', '-v', '--log-file', '/tmp/'..$USER..'-lc_pylsp.log'],
   \   'initializationOptions': s:pylsp_options,
   \ },
   \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
@@ -626,7 +626,7 @@ let g:LanguageClient_serverCommands = {
   \ 'c': ['/usr/bin/ccls'],
   \ 'go': ['gopls'],
   \ }
-
+let g:LanguageClient_settingsPath = '~/.vim/settings.json'
 " Add fixer for python on python filetypes
 let g:ale_fixers = {
   \   'python':       ['black', 'isort'],
