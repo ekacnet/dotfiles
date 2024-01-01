@@ -152,3 +152,7 @@ shopt -s direxpand 2>/dev/null
 export HISTSIZE=10000
 export HISTFILESIZE=20000
 export HISTCONTROL=ignoreboth
+if [ "$TERM" == "xterm-kitty" ]; then
+  export TERM="xterm-256color"
+
+fi
