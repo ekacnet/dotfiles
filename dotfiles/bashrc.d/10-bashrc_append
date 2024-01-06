@@ -1,0 +1,158 @@
+# Store a lot of stuff in my history
+
+# don't add simple commands like ls, bg/fg ... and the one starting with a ' ' in the history file
+export HISTIGNORE="ls:bg:fg:exit:pwd:clear:mount:umount:^ *"
+
+# If I have fzf ...
+if [ x$(which fzf) != "x" ]; then
+  # There is 2 parts
+  # one for the tab completion
+  if [ -f $HOME/.bashrc.d/completion/fzf.bash ]; then
+    source $HOME/.bashrc.d/completion/fzf.bash
+  elif [ -f /usr/share/doc/fzf/examples/completion.bash ]; then
+    source /usr/share/doc/fzf/examples/completion.bash
+  elif [ -f /usr/share/bash-completion/completions/fzf ]; then
+    source /usr/share/bash-completion/completions/fzf
+  fi
+  # one for the key binding like ctrl-r ctrl-t
+  if [ -f $HOME/.bashrc.d/completion/fzf-key-bindings.bash ]; then
+    source $HOME/.bashrc.d/completion/fzf-key-bindings.bash
+  elif [ -f /usr/share/doc/fzf/examples/key-bindings.bash ]; then
+    source /usr/share/doc/fzf/examples/key-bindings.bash
+  elif [ -f /usr/share/fzf/shell/key-bindings.bash ]; then
+    source /usr/share/fzf/shell/key-bindings.bash
+  fi
+  if [ -f /opt/homebrew/opt/fzf/shell/completion.bash ]; then
+    source /opt/homebrew/opt/fzf/shell/completion.bash
+  fi
+  if [ -f /opt/homebrew/opt/fzf/shell/key-bindings.bash ]; then
+    source /opt/homebrew/opt/fzf/shell/key-bindings.bash
+  fi
+
+
+  export FZF_DEFAULT_COMMAND='ag --nocolor -g ""'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_DEFAULT_OPTS='
+  --color fg:242,bg:236,hl:65,fg+:15,bg+:239,hl+:108
+  --color info:108,prompt:109,spinner:108,pointer:168,marker:168
+  '
+fi
+
+# I always type vi rather than vim ...
+if [ -n "$(which vim)" ]; then
+  alias vi='vim'
+fi
+
+if [ -e $HOME/.bashrc.d/scm-prompt.sh ]; then
+  source $HOME/.bashrc.d/scm-prompt.sh
+else
+  # Have an empty __git_ps1 in case ...
+  function __git_ps1 ()
+  {
+    echo -ne ""
+  }
+  git_prompt_file_1=/usr/lib/git-core/git-sh-prompt
+  git_prompt_file_2=/usr/share/git-core/contrib/completion/git-prompt.sh
+  git_prompt_file_3=/opt/homebrew/etc/bash_completion.d/git-prompt.sh
+
+  for prompt_file in $git_prompt_file_1 $git_prompt_file_2 $git_prompt_file_3; do
+    if [ -e $prompt_file ]; then
+      source $prompt_file
+      break
+    fi
+  done
+  function _dotfiles_scm_info ()
+  {
+    __git_ps1 " (%s)"
+  }
+fi
+
+function prompt-show-status ()
+{
+  # Don't use `status'.  It's read-only in zsh.
+  local stat="$?"
+
+  if test $stat -ne 0 -a $stat != 128; then
+    # If process exited by a signal, determine name of signal.
+    if test $stat -gt 128; then
+      local signal="$(builtin kill -l $[$stat - 128] 2>/dev/null)"
+      test "$signal" && signal=" ($signal)"
+    fi
+    echo "(╥_╥) $stat$signal "
+  else
+    #echo "¯\\_(ツ)_/¯"
+    echo "(ok)"
+  fi
+  #test "$BASH" && history -a
+  return 0
+}
+
+function add_to_path ()
+{
+    new_path=""
+    dir_to_add="$1"
+    prepend=${2:-1}
+    IFS=':' read -r -a paths<<< "$PATH"
+    i=0
+    for p in "${paths[@]}"; do
+      echo "$new_path" | grep -q -E "(^|:)$p($|:)"
+      if [ "$?" -ne 0 ]; then
+        if [ $i -eq 0 ]; then
+          i=$((i + 1))
+          new_path="$p"
+        else
+          i=$((i + 1))
+          new_path="$new_path:$p"
+        fi
+      fi
+    done
+
+    echo "$new_path" | grep -q -E "(^|:)$dir_to_add($|:)"
+    if [ "$?" -ne 0 ]; then
+      if [ "$prepend" -eq 1 ]; then
+        new_path="$dir_to_add:$new_path"
+      else
+        new_path="$new_path:$dir_to_add"
+      fi
+    fi
+    echo "$new_path"
+}
+
+source $HOME/.bashrc.d/term_colors
+TITLE="\[\e]2;\u@\h: \W\a\]"
+export PS1="$TITLE$N[$MC\t$N]──[$MR\u$N@$MB\h$N]:$MG\w $N\$\n\
+└──$N\$(prompt-show-status)$N$MM\$(_dotfiles_scm_info) $N\$ "
+if [ -n "$(which vim)" ]; then
+  export EDITOR=vim
+fi
+# Do not prepend mosh to window title
+export MOSH_TITLE_NOPREFIX=y
+export PATH=$(add_to_path "$HOME/bin"  0)
+# Fix SSH auth socket location so agent forwarding works with tmux.
+TARGET=~/.ssh/ssh_auth_sock
+if [ -n "$TMUX" ]; then
+  export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+else
+  if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$TARGET" ] ; then
+        ln -sf $SSH_AUTH_SOCK $TARGET
+  fi
+fi
+if which batcat &>/dev/null; then
+  alias less='batcat'
+fi
+if which bat &>/dev/null; then
+  alias less='bat'
+fi
+# Bash 4.2 and above try to add a \ before variables when "tabbing" a path with a variable
+# shopt -s direxpand could be used and revert to 4.1 behavior where TAB would expand the variable
+# Note on 8/16/2023 this is also having a nasty side effect of disabling custom completes commands
+#shopt -u progcomp
+shopt -s progcomp
+shopt -s direxpand 2>/dev/null
+export HISTSIZE=10000
+export HISTFILESIZE=20000
+export HISTCONTROL=ignoreboth
+if [ "$TERM" == "xterm-kitty" ]; then
+  export TERM="xterm-256color"
+
+fi

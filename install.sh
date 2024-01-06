@@ -71,14 +71,14 @@ linkall $basedir $HOME
 
 set +e
 if [ -e $HOME/.bashrc ]; then
-  grep -q ".bashrc.d/bashrc_append" $HOME/.bashrc
+  grep -q ".bashrc.d" $HOME/.bashrc
   ret=$?
 else
   ret=1
 fi
 set -e
 if [ $ret -ne 0 ];then
-  echo "source $HOME/.bashrc.d/bashrc_append" >>$HOME/.bashrc
+  echo 'for f in $(find $HOME/.bashrc.d/ -name "[0-9]*-*" -exec basename {} \;|sort -n); do  source $HOME/.bashrc.d/$f; done' >>$HOME/.bashrc
 fi
 
 repos=(
