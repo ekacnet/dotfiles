@@ -181,6 +181,7 @@ function! VGGrepfunc(bang)
   let words = substitute(words, '\([().[\]]\)', '\\\1',"g")
   if len(words) > 2
     call GGrep(a:bang, words)
+  endif
 endfunction
 
 function! VAckfunc(cmd)
@@ -650,6 +651,14 @@ let g:ale_python_pylsp_config = s:pylsp_options
 
 " To debug
 " let g:ale_python_pylsp_options = '-v --log-file /tmp/'..$USER..'-ale_pylsp.log'
+highlight Pmenu ctermbg=gray guibg=gray
+highlight PmenuSel ctermbg=Magenta guibg=Magenta ctermfg=black guibg=black
+
+" Pmenu – normal item
+" PmenuSel – selected item
+" PmenuSbar – scrollbar
+" PmenuThumb – thumb of the scrollbar
+
 
 " This needs to be at the and obviously
 " Now load specifics to this host
