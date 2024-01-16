@@ -154,13 +154,6 @@ cnoremap $c <C-\>eCurrentFileDir()<CR>
 cnoremap w!! %!sudo tee > /dev/null %
 
 
-" Get details on the variable/function under the cursor
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-" Go to definition
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-" Rename
-nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-
 " Functions
 " ! to override
 function! GetVisualSelection(delim)
@@ -607,27 +600,80 @@ let s:pylsp_options = {
   \   },
   \}
 
+" Get details on the variable/function under the cursor
+" nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+" Go to definition
+" nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+" Rename
+" nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
 " Allow to debug LanguageClient
 "let g:LanguageClient_loggingLevel = 'INFO'
 "let g:LanguageClient_useVirtualText = 'CodeLens'
 "let g:LanguageClient_loggingFile = expand('~/LanguageClient.log')
 "let g:LanguageClient_serverStderr = expand('~/LanguageServer.log')
-let g:LanguageClient_serverCommands = {
-  \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-  \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-  \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
-  \ 'python': {
-  \   'name': 'pylsp',
-  \   'command': ['/usr/bin/pylsp'],
-  \   'commanddebug': ['pylsp', '-v', '--log-file', '/tmp/'..$USER..'-lc_pylsp.log'],
-  \   'initializationOptions': s:pylsp_options,
-  \ },
-  \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-  \ 'cpp': ['/usr/bin/ccls'],
-  \ 'c': ['/usr/bin/ccls'],
-  \ 'go': ['gopls'],
-  \ }
-let g:LanguageClient_settingsPath = '~/.vim/settings.json'
+"let g:LanguageClient_serverCommands = {
+"  \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+"  \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+"  \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+"  \ 'python': {
+"  \   'name': 'pylsp',
+"  \   'command': ['/usr/bin/pylsp'],
+"  \   'commanddebug': ['pylsp', '-v', '--log-file', '/tmp/'..$USER..'-lc_pylsp.log'],
+"  \   'initializationOptions': s:pylsp_options,
+"  \ },
+"  \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+"  \ 'cpp': ['/usr/bin/ccls'],
+"  \ 'c': ['/usr/bin/ccls'],
+"  \ 'go': ['gopls'],
+"  \ }
+"let g:LanguageClient_settingsPath = '~/.vim/settings.json'
+" LSC settings
+let g:lsc_server_commands = {
+ \  'sls': {
+ \    'command': '/home/mat/bin/salt_lsp',
+ \    'capabilities': ['completion'],
+ \  },
+ \  'javascript': {
+ \    'command': 'typescript-language-server --stdio',
+ \    'log_level': -1,
+ \    'suppress_stderr': v:true,
+ \  },
+ \  'python': {
+ \    'name': 'pylsp',
+ \    'command': ['/usr/bin/pylsp'],
+ \    'commanddebug': ['pylsp', '-v', '--log-file', '/tmp/'..$USER..'-lc_pylsp.log'],
+ \    'message_hooks': {
+ \      'initialize': {
+ \        'initializationOptions': s:pylsp_options,
+ \      },
+ \    },
+ \  },
+ \ 'cpp': {
+ \   'command': '/usr/bin/ccls',
+ \ },
+ \ 'c': {
+ \   'command': '/usr/bin/ccls',
+ \ },
+ \ 'go': {
+ \   'command': 'gopls',
+ \ },
+ \}
+
+let g:lsc_auto_map = {
+ \  'GoToDefinition': 'gd',
+ \  'FindReferences': 'gr',
+ \  'Rename': 'gR',
+ \  'ShowHover': 'K',
+ \  'FindCodeActions': 'ga',
+ \  'Completion': 'omnifunc',
+ \}
+let g:lsc_enable_autocomplete  = v:true
+let g:lsc_enable_diagnostics   = v:false
+let g:lsc_reference_highlights = v:false
+let g:lsc_trace_level          = 'off'
+let g:lsc_default_map = v:true
+
 " Add fixer for python on python filetypes
 let g:ale_fixers = {
   \   'python':       ['black', 'isort'],
