@@ -20,15 +20,7 @@ syntax on
 " c = command mode
 " v = visual mode
 
-" TODO fix: change color at the bottom to more clearly show in which window I am
 
-" Mapping for french keyboard for vim-unimpared
-nmap & [
-nmap = ]
-omap & [
-omap = ]
-xmap & [
-xmap = ]
 " TODO figure out what I want from this
 " NERDTreeFind
 " Useful macros I use the most
@@ -80,8 +72,11 @@ nmap <Leader>t :Files<CR>
 nmap <Leader>r :Tags<CR>
 map <C-c> :call FormatDiff()<CR>
 " Navigate more easily ALE ...
-nmap <silent> <leader>aj :ALENext<cr>
-nmap <silent> <leader>ak :ALEPrevious<cr>
+nmap <silent> ]aj :ALENext<cr>
+nmap <silent> [ak :ALEPrevious<cr>
+
+nmap <silent> ]om :call EnableMypyLinter()<CR>
+nmap <silent> [om :call DisableMypyLinter()<CR>
 
 
 nmap <F8> :TagbarToggle<CR>
@@ -676,19 +671,17 @@ let g:lsc_default_map = v:true
 
 " Add fixer for python on python filetypes
 let g:ale_fixers = {
-  \   'python':       ['black', 'isort'],
+  \   'python':       ['black', 'isort', 'autoflake'],
   \   'go':           ['goimports','gofmt'],
   \   'bzl':          ['buildifier'],
   \   'terraform':    ['terraform'],
   \}
 
-autocmd FileType go let g:ale_linters = {
-  \   'go': ['gofmt', 'gopls', 'govet'],
+let g:ale_linters = {
+  \ 'go':      ['gofmt', 'gopls', 'govet'],
+  \ 'python' : ['flake8', 'pylsp']
   \}
 
-autocmd FileType python let g:ale_linters = {
-  \   'python': ['flake8', 'pylsp'],
-  \}
 
 " Enable the use of dispatch to do search
 let g:ack_use_dispatch = 1
@@ -706,6 +699,25 @@ highlight PmenuSel ctermbg=Magenta guibg=Magenta ctermfg=black guibg=black
 " PmenuThumb – thumb of the scrollbar
 
 
+function! DisableMypyLinter()
+  if isdictionary(b:ale_linters)
+    let i = index(b:ale_linters, 'mypy') == -1
+    if i != -1
+      call remove(b:ale_linters, i)
+    endif
+  endif
+endfunction
+
+function! EnableMypyLinter()
+  if !isdictionary(b:ale_linters)
+    let b:ale_linters = {
+    \  'python' : g:ale_linters['python']
+    \  }
+  endif
+  if index(b:ale_linters, 'mypy') == -1
+    call add(b:ale_linters['python'], 'mypy')
+  endif
+endfunction
 " This needs to be at the and obviously
 " Now load specifics to this host
 if filereadable(expand("~/.vimrc.local"))
