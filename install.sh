@@ -89,14 +89,32 @@ repos=(
   mileszs/ack.vim
   sheerun/vim-polyglot
   dense-analysis/ale
-  autozimu/LanguageClient-neovim.git
   Shougo/deoplete.nvim
   roxma/nvim-yarp
   roxma/vim-hug-neovim-rpc
-  prabirshrestha/vim-lsp
+  hrsh7th/deoplete-vim-lsc.git
+  junegunn/goyo.vim
+  vmware-archive/salt-vim.git
+  natebosch/vim-lsc
+  CoderCookE/vim-chatgpt.git
+  vim-ai
+)
+
+candidates=(
+  surround
+  vim-commentary
+  vim-dispatch
+  vim-fugitive
+  vim-polyglot
+  vim-sleuth
+)
+
+deprecated=(
+  autozimu/LanguageClient-neovim.git
 )
 
 other_repos=(
+  prabirshrestha/vim-lsp
   airblade/vim-gitgutter
   alampros/vim-styled-jsx
   ap/vim-css-color
@@ -105,7 +123,6 @@ other_repos=(
   haya14busa/incsearch.vim
   itchyny/lightline.vim
   jparise/vim-graphql
-  junegunn/goyo.vim
   nfnty/vim-nftables
   qpkorr/vim-bufkill
   scrooloose/nerdtree
@@ -113,7 +130,6 @@ other_repos=(
   tpope/vim-commentary
   tpope/vim-endwise
   tpope/vim-eunuch
-  tpope/vim-fugitive
   tpope/vim-repeat
   tpope/vim-rhubarb
   tpope/vim-sleuth
