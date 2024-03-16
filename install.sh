@@ -82,39 +82,36 @@ if [ $ret -ne 0 ];then
 fi
 
 repos=(
-  tpope/vim-pathogen
-  tpope/vim-dispatch
-  tpope/vim-unimpaired
-  junegunn/fzf.vim
-  mileszs/ack.vim
-  sheerun/vim-polyglot
-  dense-analysis/ale
-  Shougo/deoplete.nvim
-  roxma/nvim-yarp
-  roxma/vim-hug-neovim-rpc
-  hrsh7th/deoplete-vim-lsc.git
-  junegunn/goyo.vim
-  vmware-archive/salt-vim.git
-  natebosch/vim-lsc
-  CoderCookE/vim-chatgpt.git
-  vim-ai
+  tpope/vim-pathogen # obvious
+  tpope/vim-dispatch # to allow async commands
+  tpope/vim-unimpaired # for unimpared things like [a and ]a for file navigation
+  junegunn/fzf.vim # fzf integration
+  mileszs/ack.vim # ack integration
+  sheerun/vim-polyglot # ?
+  dense-analysis/ale # async linting
+  Shougo/deoplete.nvim # autocompletion
+  roxma/nvim-yarp # required by deoplete
+  roxma/vim-hug-neovim-rpc # required by deoplete
+  hrsh7th/deoplete-vim-lsc.git # pluging to use LSC for deoplete
+  junegunn/goyo.vim # ?
+  vmware-archive/salt-vim.git # saltstack syntax
+  natebosch/vim-lsc # language server client
+  CoderCookE/vim-chatgpt.git # ChatGPT integration in vim
+  madox2/vim-ai.git # AI Chat
 )
 
 candidates=(
   surround
   vim-commentary
-  vim-dispatch
   vim-fugitive
-  vim-polyglot
   vim-sleuth
 )
 
 deprecated=(
-  autozimu/LanguageClient-neovim.git
+  autozimu/LanguageClient-neovim.git # Tried LC and decided that it's not so great (or that lsc is a better alternative)
 )
 
 other_repos=(
-  prabirshrestha/vim-lsp
   airblade/vim-gitgutter
   alampros/vim-styled-jsx
   ap/vim-css-color
@@ -127,16 +124,11 @@ other_repos=(
   qpkorr/vim-bufkill
   scrooloose/nerdtree
   statico/vim-inform7
-  tpope/vim-commentary
   tpope/vim-endwise
   tpope/vim-eunuch
   tpope/vim-repeat
   tpope/vim-rhubarb
-  tpope/vim-sleuth
-  tpope/vim-surround
-  vim-scripts/openvpn
   wellle/targets.vim
-
   altercation/vim-colors-solarized
   arcticicestudio/nord-vim
   nanotech/jellybeans.vim
