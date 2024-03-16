@@ -629,9 +629,19 @@ let g:lsc_server_commands = {
  \    'command': '/home/mat/bin/salt_lsp',
  \    'capabilities': ['completion'],
  \  },
+ \  'typescript': {
+ \    'command': 'typescript-language-server --stdio',
+ \    'log_level': 2,
+ \    'suppress_stderr': v:true,
+ \  },
+ \  'typescriptreact': {
+ \    'command': 'typescript-language-server --stdio',
+ \    'log_level': 2,
+ \    'suppress_stderr': v:true,
+ \  },
  \  'javascript': {
  \    'command': 'typescript-language-server --stdio',
- \    'log_level': -1,
+ \    'log_level': 2,
  \    'suppress_stderr': v:true,
  \  },
  \  'python': {
