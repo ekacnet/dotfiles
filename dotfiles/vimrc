@@ -585,6 +585,15 @@ set completeopt=menu,noinsert
 let s:pylsp_options = {
   \   'pylsp': {
   \     'plugins': {
+  \       'autopep8': {
+  \         'enabled': v:false
+  \       },
+  \       'rope_rename': {
+  \         'enabled': v:false
+  \       },
+  \       'rope_completion': {
+  \         'enabled': v:false
+  \       },
   \       'pycodestyle': {
   \         'enabled': v:false
   \       },
@@ -646,8 +655,8 @@ let g:lsc_server_commands = {
  \  },
  \  'python': {
  \    'name': 'pylsp',
- \    'command': ['/usr/bin/pylsp'],
- \    'commanddebug': ['pylsp', '-v', '--log-file', '/tmp/'..$USER..'-lc_pylsp.log'],
+ \    'command': ['pylsp', '--log-file', '/dev/null'],
+ \    'debugcommand': ['pylsp', '-v', '--log-file', '/tmp/'..$USER..'-lc_pylsp.log'],
  \    'message_hooks': {
  \      'initialize': {
  \        'initializationOptions': s:pylsp_options,
@@ -698,6 +707,8 @@ let g:ack_use_dispatch = 1
 let g:ale_python_pylsp_executable = 'pylsp'
 let g:ale_python_pylsp_config = s:pylsp_options
 
+" To quiet the errors about missing modules
+let g:ale_python_pylsp_options = '--log-file /tmp/null'
 " To debug
 " let g:ale_python_pylsp_options = '-v --log-file /tmp/'..$USER..'-ale_pylsp.log'
 highlight Pmenu ctermbg=gray guibg=gray
