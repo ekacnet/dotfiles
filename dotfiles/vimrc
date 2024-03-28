@@ -553,7 +553,7 @@ endif
 
 let s:lintrcpath = globpath(join(s:lintrcfolders, ","), "tox.ini", 0, 1)
 if len(s:lintrcpath) == 0
-  s:lintrcpath = globpath(join(s:lintrcfolders, ","), ".tox.ini", 0, 1)
+  let s:lintrcpath = globpath(join(s:lintrcfolders, ","), ".tox.ini", 0, 1)
 endif
 if len(s:lintrcpath) > 0
   let g:ale_python_flake8_options = "--config ". s:lintrcpath[0]
@@ -701,7 +701,8 @@ let g:ale_fixers = {
 
 let g:ale_linters = {
   \ 'go':      ['gofmt', 'gopls', 'govet'],
-  \ 'python' : ['flake8', 'pylsp']
+  \ 'python' : ['flake8', 'pylsp'],
+  \ 'javascript' : ['cspell', 'eslint', 'flow',  'tsserver']
   \}
 
 
