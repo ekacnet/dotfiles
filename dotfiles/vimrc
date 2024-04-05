@@ -697,6 +697,7 @@ let g:ale_fixers = {
   \   'go':           ['goimports','gofmt'],
   \   'bzl':          ['buildifier'],
   \   'terraform':    ['terraform'],
+  \   'javascript':    ['prettier'],
   \}
 
 let g:ale_linters = {
