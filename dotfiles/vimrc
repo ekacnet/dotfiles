@@ -220,6 +220,7 @@ function! CommitMessages()
     iab #O Signed-off-by:
     iab #V Reviewed-by:
     iab #P Pair-Programmed-With:
+    iab `` ```<CR><CR>```
     " Go to the first line of the commit message
     exe ":1"
 endf
@@ -680,6 +681,8 @@ let g:lsc_server_commands = {
  \ },
  \ 'go': {
  \   'command': 'gopls',
+ \    "log_level": -1,
+ \    "suppress_stderr": v:true,
  \ },
  \}
 
