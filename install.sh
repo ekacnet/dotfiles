@@ -98,6 +98,7 @@ repos=(
   natebosch/vim-lsc # language server client
   CoderCookE/vim-chatgpt.git # ChatGPT integration in vim
   madox2/vim-ai.git # AI Chat
+  ruanyl/coverage.vim # Codecoverage for JS
 )
 
 candidates=(
