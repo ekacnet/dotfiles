@@ -194,6 +194,8 @@ function! ProseMode()
   set spell noci nosi noai nolist noshowmode noshowcmd
   set complete+=s
   set bg=light
+  hi SpellBad ctermfg=1 term=bold ctermbg=225 gui=undercurl guisp=Magenta
+
   if !has('gui_running')
     let g:solarized_termcolors=256
   endif
@@ -507,6 +509,10 @@ hi Comment ctermfg=LightGreen
 " Dark blue better that light blue ?
 hi Search ctermbg=darkblue
 
+" LSC is aliasing lscDiagnosticWarning to SpellBad by default it's a red background that make
+" things very hard to read
+hi SpellBad ctermbg=30 term=bold
+" Might have to do it for lscDiagnosticError too
 " Should I change the inc search ?
 "hi IncSearch ctermbg=red
 
