@@ -680,7 +680,7 @@ let g:lsc_server_commands = {
  \   'command': '/usr/bin/ccls',
  \ },
  \ 'go': {
- \   'command': 'gopls',
+ \   'command': ['gopls','-remote=auto'],
  \    "log_level": -1,
  \    "suppress_stderr": v:true,
  \ },
@@ -711,7 +711,7 @@ let g:ale_fixers = {
   \}
 
 let g:ale_linters = {
-  \ 'go':      ['gofmt', 'gopls', 'govet'],
+  \ 'go':      [ 'gopls', 'govet'],
   \ 'python' : ['flake8', 'pylsp'],
   \ 'javascript' : ['cspell', 'eslint', 'flow',  'tsserver']
   \}
@@ -724,6 +724,7 @@ let g:ale_python_pylsp_config = s:pylsp_options
 
 " To quiet the errors about missing modules
 let g:ale_python_pylsp_options = '--log-file /tmp/null'
+let g:ale_go_gopls_options = '-remote=auto'
 " To debug
 " let g:ale_python_pylsp_options = '-v --log-file /tmp/'..$USER..'-ale_pylsp.log'
 highlight Pmenu ctermbg=gray guibg=gray
