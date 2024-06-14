@@ -158,3 +158,4 @@ if [ "$TERM" == "xterm-kitty" ]; then
 fi
 
 alias gamend='git commit --amend --no-edit'
+alias greflog='git reflog --pretty=format:"%C(yellow)%h%C(reset) %aD %C(green)%gd%C(reset)%C(auto)%d%C(reset): %s" '
