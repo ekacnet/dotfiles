@@ -582,6 +582,8 @@ let g:ale_fix_on_save = 1
 " moment
 "let g:ale_completion_enabled = 1
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#auto_complete_start_length = 3
+let g:deoplete#enable_auto_select = 1
 " Different options for insert mode completion
 " menu: use a popup for completion
 " noinsert: Do not insert any text for a match until the user selects
@@ -727,7 +729,10 @@ let g:ale_python_pylsp_options = '--log-file /tmp/null'
 let g:ale_go_gopls_options = '-remote=auto'
 " To debug
 " let g:ale_python_pylsp_options = '-v --log-file /tmp/'..$USER..'-ale_pylsp.log'
-highlight Pmenu ctermbg=gray guibg=gray
+" Maybe this one
+highlight Pmenu ctermbg=darkblue guibg=darkblue
+" graybg is hard to read when doing hover
+"highlight Pmenu ctermbg=gray guibg=gray
 highlight PmenuSel ctermbg=Magenta guibg=Magenta ctermfg=black guibg=black
 
 " Pmenu – normal item
