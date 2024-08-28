@@ -83,6 +83,7 @@ function prompt-show-status ()
     #echo "¯\\_(ツ)_/¯"
     echo "(ok)"
   fi
+  _set_mouse_on
   #test "$BASH" && history -a
   return 0
 }
@@ -127,6 +128,11 @@ function add_to_path ()
     echo "$new_path"
 }
 
+function _set_mouse_on() {
+  echo "setting mouse on" >>/tmp/mouse
+  tmux setw -g mouse on
+}
+
 source $HOME/.bashrc.d/term_colors
 TITLE="\[\e]2;\u@\h: \W\a\]"
 export PS1="$TITLE$N[$MC\t$N]──[$MR\u$N@$MB\h$N]:$MG\w $N\$\n\
@@ -140,6 +146,7 @@ export PATH=$(add_to_path "$HOME/bin" 1)
 # Fix SSH auth socket location so agent forwarding works with tmux.
 TARGET=~/.ssh/ssh_auth_sock
 if [ -n "$TMUX" ]; then
+  export TERM="xterm-256color"
   export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 else
   if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$TARGET" ] ; then
@@ -168,3 +175,11 @@ fi
 
 alias gamend='git commit --amend --no-edit'
 alias greflog='git reflog --pretty=format:"%C(yellow)%h%C(reset) %aD %C(green)%gd%C(reset)%C(auto)%d%C(reset): %s" '
+
+export FZF_KUBECTL_OPTS="-1 -0 --bind tab:accept"
+if [ -e ~/.bashrc.d/completion/kube_completion_bash.sh ]; then
+  source ~/.bashrc.d/completion/kube_completion_bash.sh
+else
+  kubectl completion bash | sed 's#"${requestComp}" 2>/dev/null#"${requestComp}" 2>/dev/null | ghead -n -1 | fzf ${FZF_KUBECTL_OPTS} #g' > ~/.bashrc.d/completion/kube_completion_bash.sh
+  source ~/.bashrc.d/completion/kube_completion_bash.sh
+fi
