@@ -120,15 +120,15 @@ nnoremap <C-w>l :silent call KeepCurrentLine('l')<CR>
 " ! to not jump to the first result, see make command documentation
 " \b: word boundary end
 nmap <M-K>    mo:GGrepw! \b<cword>\b<CR>
-nmap <Esc>K   mo:GGrepw! \b<cword>\b<CR>
+nmap <Esc>F   mo:GGrepw! \b<cword>\b<CR>
 "Prefer GGrep over Ggrep from vim-fugitive, also vim-fugitive is not dealing with \b markers
 "nmap <Esc>K   :Ggrep -q "<cword>" <CR>
 nmap <M-k>    mo:Sack! "\b<cword>\b"<CR>
-nmap <Esc>k   mo:Sack! "\b<cword>\b"<CR>
+nmap <Esc>f   mo:Sack! "\b<cword>\b"<CR>
 "<C-U> remove the visual range
-vmap <Esc>k   mo:<C-U>VAck!<CR>
+vmap <Esc>f   mo:<C-U>VAck!<CR>
 vmap <M-k>    mo:<C-U>VAck!<CR>
-vmap <Esc>K   mo:<C-U>VGGrep!<CR>
+vmap <Esc>F   mo:<C-U>VGGrep!<CR>
 vmap <M-K>    mo:<C-U>VGGrep!<CR>
 
 " Alt-W to delete a buffer and remove it from the list but keep the window via bufkill.vim
@@ -321,9 +321,17 @@ function GGrep(bang, words)
   " <bang> when calling function will translate to the ! char, so if included in a
   " string it will be concatenated, for instance foo<bang> will give foo!, if it's a integer
   " then it will negate it's value ie. <bang>0 becomes !0 or 1 if the command was called with bang
-  call fzf#vim#grep(
-        \ 'git grep --line-number -- '.shellescape(a:words), 0,
-        \ fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), fullscreen)
+  " iterate on a:words and shellescape them
+  let words_list = []
+  for w in a:words
+    if !(w =~ '^"' || w =~"^'" || w =~ '"$' || w =~ "'$")
+      let w = shellescape(w)
+    endif
+    let words_list = add(words_list, w)
+    let words = join(words_list, ' ')
+  endfor
+
+  call fzf#vim#grep('git grep --line-number -- '.words, 0,  fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), fullscreen)
 endfunction
 
 " Create a group for autocmd ?
@@ -531,7 +539,7 @@ command! BufCloseOthers %bd|e#
 
 command! ProseMode call ProseMode()
 
-command! -bang -nargs=* GGrep    call GGrep('<bang>', '<q-args>')
+command! -bang -nargs=* GGrep    call GGrep('<bang>', [<f-args>])
 command! -bang -nargs=* GGrepw   call GGrepwrapper('<bang>', <q-args>)
 command! -bang VGGrep            call VGGrepfunc('<bang>')
 " argument to VAckfunc will be grep or grep! depending how Vack is called
