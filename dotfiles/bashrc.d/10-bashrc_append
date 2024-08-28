@@ -22,15 +22,15 @@ if [ x$(which fzf) != "x" ]; then
   elif [ -f /usr/share/fzf/shell/key-bindings.bash ]; then
     source /usr/share/fzf/shell/key-bindings.bash
   fi
-  if [ -f /opt/homebrew/opt/fzf/shell/completion.bash ]; then
-    source /opt/homebrew/opt/fzf/shell/completion.bash
+  if [ -f ${BREW_ROOT:-/opt/homebrew}/opt/fzf/shell/completion.bash ]; then
+    source ${BREW_ROOT:-/opt/homebrew}/opt/fzf/shell/completion.bash
   fi
-  if [ -f /opt/homebrew/opt/fzf/shell/key-bindings.bash ]; then
-    source /opt/homebrew/opt/fzf/shell/key-bindings.bash
+  if [ -f ${BREW_ROOT:-/opt/homebrew}/opt/fzf/shell/key-bindings.bash ]; then
+    source ${BREW_ROOT:-/opt/homebrew}/opt/fzf/shell/key-bindings.bash
   fi
 
 
-  export FZF_DEFAULT_COMMAND='ag --nocolor -g ""'
+  export FZF_DEFAULT_COMMAND='ag --nocolor --hidden -g ""'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   export FZF_DEFAULT_OPTS='
   --color fg:242,bg:236,hl:65,fg+:15,bg+:239,hl+:108
@@ -53,7 +53,7 @@ else
   }
   git_prompt_file_1=/usr/lib/git-core/git-sh-prompt
   git_prompt_file_2=/usr/share/git-core/contrib/completion/git-prompt.sh
-  git_prompt_file_3=/opt/homebrew/etc/bash_completion.d/git-prompt.sh
+  git_prompt_file_3=${BREW_ROOT:-/opt/homebrew}/etc/bash_completion.d/git-prompt.sh
 
   for prompt_file in $git_prompt_file_1 $git_prompt_file_2 $git_prompt_file_3; do
     if [ -e $prompt_file ]; then
@@ -63,7 +63,7 @@ else
   done
   function _dotfiles_scm_info ()
   {
-    __git_ps1 " (%s)"
+    __git_ps1 "(%s) "
   }
 fi
 
@@ -130,7 +130,7 @@ function add_to_path ()
 source $HOME/.bashrc.d/term_colors
 TITLE="\[\e]2;\u@\h: \W\a\]"
 export PS1="$TITLE$N[$MC\t$N]──[$MR\u$N@$MB\h$N]:$MG\w $N\$\n\
-└──$N\$(prompt-show-status)$N$MM\$(_dotfiles_scm_info) $N\$ "
+└──$N\$(prompt-show-status)$N $Y\${VIRTUAL_ENV_PROMPT}$N$MM\$(_dotfiles_scm_info)$N\$ "
 if [ -n "$(which vim)" ]; then
   export EDITOR=vim
 fi
