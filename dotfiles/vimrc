@@ -44,11 +44,12 @@ nmap \f :ALEFix<CR>
 nmap \g :GitGutterToggle<CR>
 nmap \i vip:sort<CR>
 " Invert number
-nmap \l :setlocal number!<CR>:setlocal number?<CR>
+nmap \n :setlocal number!<CR>:setlocal number?<CR>
 " Small indentation mode
 nmap \m :set expandtab tabstop=2 shiftwidth=2 softtabstop=2<CR>
 " Invert paste mode !
 nmap \o :set paste!<CR>:set paste?<CR>
+" Invert number mode !
 nmap \p :ProseMode<CR>
 " allow to unhilight search
 nmap \q :nohlsearch<CR>
