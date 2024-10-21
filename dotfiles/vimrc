@@ -676,7 +676,7 @@ let g:lsc_server_commands = {
  \  },
  \  'python': {
  \    'name': 'pylsp',
- \    'command': ['pylsp', '--log-file', '/dev/null'],
+ \    'command': ['pylsp', '--log-file', '/tmp/pylsp.log'],
  \    'debugcommand': ['pylsp', '-v', '--log-file', '/tmp/'..$USER..'-lc_pylsp.log'],
  \    'message_hooks': {
  \      'initialize': {
@@ -736,6 +736,7 @@ let g:ale_python_pylsp_config = s:pylsp_options
 " To quiet the errors about missing modules
 let g:ale_python_pylsp_options = '--log-file /tmp/null'
 let g:ale_go_gopls_options = '-remote=auto'
+"let g:ale_python_pylsp_options = '--log-file /tmp/pylsp_ale.log'
 " To debug
 " let g:ale_python_pylsp_options = '-v --log-file /tmp/'..$USER..'-ale_pylsp.log'
 " Maybe this one
