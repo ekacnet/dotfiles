@@ -183,3 +183,7 @@ else
   kubectl completion bash | sed 's#"${requestComp}" 2>/dev/null#"${requestComp}" 2>/dev/null | ghead -n -1 | fzf ${FZF_KUBECTL_OPTS} #g' > ~/.bashrc.d/completion/kube_completion_bash.sh
   source ~/.bashrc.d/completion/kube_completion_bash.sh
 fi
+
+alias k='kubectl'
+alias kt='kubectl --context'
+
