@@ -120,8 +120,8 @@ nnoremap <C-w>l :silent call KeepCurrentLine('l')<CR>
 " type the function name (Ack, ...)
 " ! to not jump to the first result, see make command documentation
 " \b: word boundary end
-nmap <M-K>    mo:GGrepw! \b<cword>\b<CR>
-nmap <Esc>F   mo:GGrepw! \b<cword>\b<CR>
+nmap <M-K>    mo:GGrepw! "\b<cword>\b"<CR>
+nmap <Esc>F   mo:GGrepw! "\b<cword>\b"<CR>
 "Prefer GGrep over Ggrep from vim-fugitive, also vim-fugitive is not dealing with \b markers
 "nmap <Esc>K   :Ggrep -q "<cword>" <CR>
 nmap <M-k>    mo:Sack! "\b<cword>\b"<CR>
@@ -291,15 +291,14 @@ endfunction
 
 " Can't call directly GGrep with things like <cword> or \b<cword>\b as they are not extrapolated
 " the goal of this function is extrapolate/expand them as it would happen with the vim grep command
-function! GGrepwrapper(bang, args)
-  if empty(a:args)
-    let words = expand("<cword>")
+function! GGrepwrapper(bang, words)
+  if empty(a:words)
+    let words = [expand("<cword>")]
   else
-    let words_list = [ ExpandString(a:args) ]
-    for w in a:000
-      let words_list = add(words_list, ExpandString(w))
+    for w in a:words
+      let words = []
+      let words = add(words, ExpandString(w))
     endfor
-    let words = join(words_list, ' ')
   endif
   " Note because we have both the function and the command, calling without the call will call the
   " command not the function and the parameters are not expanded but passed as is
@@ -541,7 +540,7 @@ command! BufCloseOthers %bd|e#
 command! ProseMode call ProseMode()
 
 command! -bang -nargs=* GGrep    call GGrep('<bang>', [<f-args>])
-command! -bang -nargs=* GGrepw   call GGrepwrapper('<bang>', <q-args>)
+command! -bang -nargs=* GGrepw   call GGrepwrapper('<bang>', [<f-args>])
 command! -bang VGGrep            call VGGrepfunc('<bang>')
 " argument to VAckfunc will be grep or grep! depending how Vack is called
 command! -bang VAck              call VAckfunc('grep<bang>')
