@@ -157,9 +157,15 @@ else
 fi
 if which batcat &>/dev/null; then
   alias less='batcat'
-fi
-if which bat &>/dev/null; then
+  alias yless='batcat -l yaml'
+  alias jless='batcat -l json'
+elif which bat &>/dev/null; then
+  alias yless='bat -l yaml'
+  alias jless='bat -l json'
   alias less='bat'
+else
+  alias jless = 'less'
+  alias yless = 'less'
 fi
 # Bash 4.2 and above try to add a \ before variables when "tabbing" a path with a variable
 # shopt -s direxpand could be used and revert to 4.1 behavior where TAB would expand the variable
@@ -189,4 +195,10 @@ fi
 
 alias k='kubectl'
 alias kt='kubectl --context'
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export BAT_PAGER="less -RF"
+# A somewhat readable color scheme
+export BAT_THEME=base16
+
+
 
