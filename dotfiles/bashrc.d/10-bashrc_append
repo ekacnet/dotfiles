@@ -179,6 +179,7 @@ alias gamend='git commit --amend --no-edit'
 alias greflog='git reflog --pretty=format:"%C(yellow)%h%C(reset) %aD %C(green)%gd%C(reset)%C(auto)%d%C(reset): %s" '
 
 export FZF_KUBECTL_OPTS="-1 -0 --bind tab:accept"
+mkdir -p ~/.bashrc.d/completion
 if [ -e ~/.bashrc.d/completion/kube_completion_bash.sh ]; then
   source ~/.bashrc.d/completion/kube_completion_bash.sh
 else

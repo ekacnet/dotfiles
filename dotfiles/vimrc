@@ -295,8 +295,8 @@ function! GGrepwrapper(bang, words)
   if empty(a:words)
     let words = [expand("<cword>")]
   else
+    let words = []
     for w in a:words
-      let words = []
       let words = add(words, ExpandString(w))
     endfor
   endif
