@@ -83,7 +83,9 @@ function prompt-show-status ()
     #echo "¯\\_(ツ)_/¯"
     echo "(ok)"
   fi
-  _set_mouse_on
+  if which tmux; then
+    _set_mouse_on
+  fi
   #test "$BASH" && history -a
   return 0
 }
