@@ -200,6 +200,8 @@ function! ProseMode()
   if !has('gui_running')
     let g:solarized_termcolors=256
   endif
+
+  call deoplete#disable()
   "colors solarized
 endfunction
 
@@ -592,7 +594,7 @@ let g:ale_fix_on_save = 1
 " moment
 "let g:ale_completion_enabled = 1
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#auto_complete_start_length = 3
+let g:deoplete#min_pattern_length = 3
 let g:deoplete#enable_auto_select = 1
 " Different options for insert mode completion
 " menu: use a popup for completion
@@ -617,6 +619,15 @@ let s:pylsp_options = {
   \         'enabled': v:false
   \       },
   \       'pycodestyle': {
+  \         'enabled': v:false
+  \       },
+  \       'mccabe': {
+  \         'enabled': v:false
+  \       },
+  \       'flake8': {
+  \         'enabled': v:false
+  \       },
+  \       'pylint': {
   \         'enabled': v:false
   \       },
   \       'pyflakes': {
@@ -677,8 +688,8 @@ let g:lsc_server_commands = {
  \  },
  \  'python': {
  \    'name': 'pylsp',
- \    'command': ['pylsp', '--log-file', '/tmp/pylsp.log'],
- \    'debugcommand': ['pylsp', '-v', '--log-file', '/tmp/'..$USER..'-lc_pylsp.log'],
+ \    'prodcommand': ['pylsp', '--log-file', '/dev/null'],
+ \    'command': ['pylsp', '-v', '--log-file', '/tmp/'..$USER..'-lc_pylsp.log'],
  \    'message_hooks': {
  \      'initialize': {
  \        'initializationOptions': s:pylsp_options,
@@ -724,7 +735,7 @@ let g:ale_fixers = {
 
 let g:ale_linters = {
   \ 'go':      [ 'gopls', 'govet'],
-  \ 'python' : ['flake8', 'pylsp'],
+  \ 'python' : [ 'flake8'],
   \ 'javascript' : ['cspell', 'eslint', 'flow',  'tsserver']
   \}
 
