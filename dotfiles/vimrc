@@ -808,16 +808,30 @@ let g:coverage_show_uncovered = 1
 let g:ale_completion_delay = 300
 let g:copilot_idle_delay = 400
 " let's make this optional if tmux is not installed
-if executable('tmux')
-" tmux is installed, you can add your tmux-specific configurations here
-  command! DisableTmuxMouse silent !tmux setw -g mouse off
-  command! EnableTmuxMouse silent !tmux setw -g mouse on
+if executable('tmux') && exists('$TMUX')
+  if v:version >= 900
+    def DisableTmuxMouse()
+      job_start(['tmux', 'setw', '-g', 'mouse', 'off'])
+    enddef
 
-  augroup TmuxMouseToggle
+    def EnableTmuxMouse()
+      job_start(['tmux', 'setw', '-g', 'mouse', 'on'])
+    enddef
+    augroup TmuxMouseToggle
       autocmd!
-      autocmd VimEnter * silent !tmux setw -g mouse off
-      autocmd VimLeave * silent !tmux setw -g mouse on
-  augroup END
+      autocmd VimEnter * call DisableTmuxMouse()
+      autocmd VimLeavePre * call EnableTmuxMouse()
+    augroup END
+  else
+    command! DisableTmuxMouse silent !tmux setw -g mouse off
+    command! EnableTmuxMouse silent !tmux setw -g mouse on
+
+    augroup TmuxMouseToggle
+        autocmd!
+        autocmd VimEnter * silent !tmux setw -g mouse off
+        autocmd VimLeave * silent !tmux setw -g mouse on
+    augroup END
+  endif
 endif
 call deoplete#custom#option('auto_complete_delay', 200)
 let g:ale_disable_lsp = 0
