@@ -597,7 +597,7 @@ let g:ale_fix_on_save = 1
 " moment
 "let g:ale_completion_enabled = 1
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#min_pattern_length = 3
+"let g:deoplete#min_pattern_length = 3
 let g:deoplete#enable_auto_select = 1
 " Different options for insert mode completion
 " menu: use a popup for completion
