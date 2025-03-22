@@ -140,6 +140,9 @@ nmap <M-w>  :BD<CR>
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
+" \ is actually quite complicated to get on any keyboard I feel
+nmap , \
+
 " Typing `$c` on the command line expands to the current path, so it's easy to edit a file in
 " the same directory as the current file.
 " Note: <C-\>e execute the function after it
