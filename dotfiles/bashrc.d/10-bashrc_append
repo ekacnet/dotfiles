@@ -164,8 +164,8 @@ elif which bat &>/dev/null; then
   alias jless='bat -l json'
   alias less='bat'
 else
-  alias jless = 'less'
-  alias yless = 'less'
+  alias jless='less'
+  alias yless='less'
 fi
 # Bash 4.2 and above try to add a \ before variables when "tabbing" a path with a variable
 # shopt -s direxpand could be used and revert to 4.1 behavior where TAB would expand the variable
