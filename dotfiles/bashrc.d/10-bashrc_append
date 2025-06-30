@@ -83,7 +83,7 @@ function prompt-show-status ()
     #echo "¯\\_(ツ)_/¯"
     echo "(ok)"
   fi
-  if which -s tmux && test -n "$TMUX"; then
+  if which -s tmux &>/dev/null && test -n "$TMUX"; then
     _set_mouse_on
   fi
   #test "$BASH" && history -a
@@ -131,8 +131,11 @@ function add_to_path ()
 }
 
 function _set_mouse_on() {
-  echo "setting mouse on" >>/tmp/mouse
-  tmux setw -g mouse on
+  if [ -n "$TMUX" ]; then
+    echo "setting mouse on" >>/tmp/mouse
+    tmux setw -g mouse on
+    return
+  fi
 }
 
 source $HOME/.bashrc.d/term_colors
@@ -173,8 +176,8 @@ fi
 #shopt -u progcomp
 shopt -s progcomp
 shopt -s direxpand 2>/dev/null
-export HISTSIZE=10000
-export HISTFILESIZE=20000
+export HISTSIZE=100000
+export HISTFILESIZE=200000
 export HISTCONTROL=ignoreboth
 if [ "$TERM" == "xterm-kitty" ]; then
   export TERM="xterm-256color"
