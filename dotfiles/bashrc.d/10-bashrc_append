@@ -30,7 +30,8 @@ if [ x$(which fzf) != "x" ]; then
   fi
 
 
-  export FZF_DEFAULT_COMMAND='ag --nocolor --hidden -g ""'
+  #export FZF_DEFAULT_COMMAND='ag --nocolor --hidden -g ""'
+  export FZF_DEFAULT_COMMAND='git ls-files'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   export FZF_DEFAULT_OPTS='
   --color fg:242,bg:236,hl:65,fg+:15,bg+:239,hl+:108
