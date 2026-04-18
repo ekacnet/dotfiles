@@ -729,7 +729,7 @@ let g:lsc_default_map = v:true
 
 " Add fixer for python on python filetypes
 let g:ale_fixers = {
-  \   'python':       ['black', 'isort', 'autoflake'],
+  \   'python':       ['ruff', 'ruff_format'],
   \   'go':           ['goimports','gofmt'],
   \   'bzl':          ['buildifier'],
   \   'terraform':    ['terraform'],
@@ -739,7 +739,7 @@ let g:ale_fixers = {
 
 let g:ale_linters = {
   \ 'go':      [ 'gopls', 'govet'],
-  \ 'python' : [ 'flake8'],
+  \ 'python' : [ 'ruff'],
   \ 'javascript' : ['cspell', 'eslint', 'flow',  'tsserver']
   \}
 
