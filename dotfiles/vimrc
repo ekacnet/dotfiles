@@ -368,7 +368,7 @@ autocmd BufReadPre *.pdf set noruler
 autocmd BufRead *.pdf silent %!pdftotext "%" -nopgbrk -layout -q -eol unix -
 autocmd BufReadPost *.pdf exec "%s/[^[:alnum:][:punct:][:space:]]//g"
 
-" By default vim keep a in the mark named " the last line where the cursor was
+" By default vim keep in the mark named " the last line where the cursor was
 " when the file was last open.
 " '" is how to get this address, of course we need to escape this when calling functions like line()
 " or execute so "'\""
