@@ -1,6 +1,10 @@
 " leader is a comma now
 let mapleader = ','
 let g:ackprg = "ag"
+" control where we store marks 
+"set viminfofile='$HOME/.viminfo'
+" 20 marks and 100 registers
+"set viminfo='20,\"100
 
 " C-?? mapping depending on the mode(s)
 " Insert: C-O execute a command and return to insert mode
