@@ -62,6 +62,14 @@ nmap <silent> [ak :ALEPrevious<cr>
 
 nmap <silent> ]om :call EnableMypyLinter()<CR>
 nmap <silent> [om :call DisableMypyLinter()<CR>
+" Codex shortcuts:
+"   ,cc in normal mode opens an interactive Codex session in a split
+"   ,cp prompts for an initial instruction before opening Codex
+"   ,cc in visual mode asks for an instruction and sends the selected text
+"   <ctrl-w>-c to close the window
+nnoremap <silent> <leader>cc :Codex<CR>
+nnoremap <silent> <leader>cp :call <SID>CodexPrompt()<CR>
+xnoremap <silent> <leader>cc :<C-u>call <SID>CodexSendSelection('')<CR>
 
 
 "Map F5 but with no recursion
@@ -189,6 +197,96 @@ function! ProseMode()
 
   call deoplete#disable()
   "colors solarized
+endfunction
+
+" Codex helpers:
+"   :Codex opens Codex in a terminal split rooted at the current working directory
+"   :Codex write a regression test for this file
+"   visually select text, then run :CodexSelection refactor this piece
+let s:codex_bufnr = -1
+
+function! s:CodexPrepareWindow() abort
+  if bufexists(s:codex_bufnr)
+    let l:winnr = bufwinnr(s:codex_bufnr)
+    if l:winnr > 0
+      execute l:winnr . 'wincmd w'
+      if &buftype ==# 'terminal'
+        let l:job = term_getjob(bufnr('%'))
+        if type(l:job) == v:t_job && job_status(l:job) ==# 'run'
+          call job_stop(l:job)
+        endif
+      endif
+      execute 'enew'
+      return
+    endif
+
+    botright 15split
+    execute 'buffer ' . s:codex_bufnr
+    if &buftype ==# 'terminal'
+      let l:job = term_getjob(bufnr('%'))
+      if type(l:job) == v:t_job && job_status(l:job) ==# 'run'
+        call job_stop(l:job)
+      endif
+    endif
+    execute 'enew'
+    return
+  endif
+
+  botright 15split
+endfunction
+
+function! s:CodexOpen(prompt) abort
+  let l:cmd = ['codex', '--cd', getcwd()]
+  if !empty(a:prompt)
+    call add(l:cmd, a:prompt)
+  endif
+
+  if exists('*term_start')
+    call s:CodexPrepareWindow()
+    call term_start(l:cmd, {'curwin': 1, 'term_finish': 'open'})
+    let s:codex_bufnr = bufnr('%')
+    startinsert
+  elseif exists(':terminal')
+    call s:CodexPrepareWindow()
+    execute 'terminal ++curwin ' . join(map(copy(l:cmd), 'shellescape(v:val)'), ' ')
+    let s:codex_bufnr = bufnr('%')
+    startinsert
+  else
+    echoerr 'Codex integration requires Vim with +terminal support'
+  endif
+endfunction
+
+function! s:CodexPrompt() abort
+  let l:prompt = input('Codex prompt: ')
+  if empty(trim(l:prompt))
+    echo 'Codex prompt cancelled'
+    return
+  endif
+
+  call s:CodexOpen(l:prompt)
+endfunction
+
+function! s:CodexSendSelection(instruction) abort
+  let l:selection = GetVisualSelection("\n")
+  if empty(trim(l:selection))
+    echoerr 'No visual selection found'
+    return
+  endif
+
+  let l:instruction = a:instruction
+  if empty(trim(l:instruction))
+    let l:instruction = input('Codex prompt: ')
+  endif
+  if empty(trim(l:instruction))
+    echo 'Codex prompt cancelled'
+    return
+  endif
+
+  let l:filetype = empty(&filetype) ? 'text' : &filetype
+  let l:filename = expand('%:p')
+  let l:context = empty(l:filename) ? '' : ' from ' . l:filename
+  let l:prompt = l:instruction . "\n\nSelected text" . l:context . ":\n```" . l:filetype . "\n" . l:selection . "\n```"
+  call s:CodexOpen(l:prompt)
 endfunction
 
 function! FormatDiff()
@@ -528,6 +626,12 @@ command! W w
 command! BufCloseOthers %bd|e#
 
 command! ProseMode call ProseMode()
+" Codex commands:
+"   :Codex
+"   :Codex explain this module
+"   :'<,'>CodexSelection add tests for this function
+command! -nargs=* Codex call s:CodexOpen(<q-args>)
+command! -range -nargs=* CodexSelection call s:CodexSendSelection(<q-args>)
 
 command! -bang -nargs=* GGrep    call GGrep('<bang>', [<f-args>])
 command! -bang -nargs=* GGrepw   call GGrepwrapper('<bang>', [<f-args>])
