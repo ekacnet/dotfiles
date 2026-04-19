@@ -1,6 +1,7 @@
 " leader is a comma now
 let mapleader = ','
 let g:ackprg = "ag"
+
 " control where we store marks 
 "set viminfofile='$HOME/.viminfo'
 " 20 marks and 100 registers
@@ -11,11 +12,9 @@ let g:ackprg = "ag"
 
 " Use pathogen to easily modify the runtime path to include all
 " " plugins under the ~/.vim/bundle directory
-if version >= 700
-  filetype off
-  call pathogen#infect()
-  filetype plugin indent on
-endif
+filetype off
+call pathogen#infect()
+filetype plugin indent on
 
 syntax on
 
@@ -25,14 +24,11 @@ syntax on
 " v = visual mode
 
 
-" Useful macros I use the most
-nmap \A :set formatoptions+=a<CR>:echo "autowrap enabled"<CR>
-nmap \a :set formatoptions-=a<CR>:echo "autowrap disabled"<CR>
-nmap \F :NERDTreeFind<CR>
 " enable goyo + movement tzz
 " zz: put current line at the center of the screen keep current column
 nmap \W mt:Goyo<CR>'tzz
 nmap \c :call TmuxPaneClear()<CR>
+
 nmap \d :ALEToggleBuffer<CR>
 nmap \f :ALEFix<CR>
 " Invert number
@@ -53,9 +49,9 @@ nmap \w :setlocal wrap!<CR>:setlocal wrap?<CR>
 nmap \x :cclose<CR>
 " Useful on mac, save the file and call open on the filename of the current buffer (%)
 nmap \z :w<CR>:!open %<CR><CR>
-nmap ; :Buffers<CR>
+
 nmap <Leader>t :Files<CR>
-map <C-c> :call FormatDiff()<CR>
+nmap ; :Buffers<CR>
 " Navigate more easily ALE ...
 nmap <silent> ]aj :ALENext<cr>
 nmap <silent> [ak :ALEPrevious<cr>
@@ -71,9 +67,7 @@ nnoremap <silent> <leader>cc :Codex<CR>
 nnoremap <silent> <leader>cp :call <SID>CodexPrompt()<CR>
 xnoremap <silent> <leader>cc :<C-u>call <SID>CodexSendSelection('')<CR>
 
-
-"Map F5 but with no recursion
-nnoremap <F5> :GundoToggle<CR>
+nnoremap <Leader>u :GundoToggle<CR>
 
 " Turn off linewise keys. Normally, the `j' and `k' keys move the cursor down one entire line. with
 " line wrapping on, this can cause the cursor to actually skip a few lines on the screen because
@@ -111,21 +105,16 @@ nnoremap <C-w>l :silent call KeepCurrentLine('l')<CR>
 " type the function name (Ack, ...)
 " ! to not jump to the first result, see make command documentation
 " \b: word boundary end
-nmap <M-K>    mo:GGrepw! "\b<cword>\b"<CR>
 nmap <Esc>F   mo:GGrepw! "\b<cword>\b"<CR>
 "Prefer GGrep over Ggrep from vim-fugitive, also vim-fugitive is not dealing with \b markers
 "nmap <Esc>K   :Ggrep -q "<cword>" <CR>
-nmap <M-k>    mo:Sack! "\b<cword>\b"<CR>
 nmap <Esc>f   mo:Sack! "\b<cword>\b"<CR>
 "<C-U> remove the visual range
 vmap <Esc>f   mo:<C-U>VAck!<CR>
-vmap <M-k>    mo:<C-U>VAck!<CR>
 vmap <Esc>F   mo:<C-U>VGGrep!<CR>
-vmap <M-K>    mo:<C-U>VGGrep!<CR>
 
 " Alt-W to delete a buffer and remove it from the list but keep the window via bufkill.vim
 nmap <Esc>w :BD<CR>
-nmap <M-w>  :BD<CR>
 
 " Quickly edit/reload the vimrc file
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
@@ -634,6 +623,7 @@ command! -nargs=* Codex call s:CodexOpen(<q-args>)
 command! -range -nargs=* CodexSelection call s:CodexSendSelection(<q-args>)
 
 command! -bang -nargs=* GGrep    call GGrep('<bang>', [<f-args>])
+" To be used only for finding something
 command! -bang -nargs=* GGrepw   call GGrepwrapper('<bang>', [<f-args>])
 command! -bang VGGrep            call VGGrepfunc('<bang>')
 " argument to VAckfunc will be grep or grep! depending how Vack is called
@@ -842,6 +832,9 @@ let g:ale_go_gopls_options = '-remote=auto'
 "let g:ale_python_pylsp_options = '--log-file /tmp/pylsp_ale.log'
 " To debug
 " let g:ale_python_pylsp_options = '-v --log-file /tmp/'..$USER..'-ale_pylsp.log'
+
+
+" Colors
 " Maybe this one
 highlight Pmenu ctermbg=darkblue guibg=darkblue
 " graybg is hard to read when doing hover
@@ -875,9 +868,6 @@ function! EnableMypyLinter()
 endfunction
 " This needs to be at the and obviously
 " Now load specifics to this host
-if filereadable(expand("~/.vimrc.local"))
-  source ~/.vimrc.local
-endif
 " Specify the path to `coverage.json` file relative to your current working directory.
  let g:coverage_json_report_path = 'coverage/coverage-final.json'
 
@@ -923,3 +913,6 @@ if executable('tmux') && exists('$TMUX')
 endif
 call deoplete#custom#option('auto_complete_delay', 200)
 let g:ale_disable_lsp = 0
+if filereadable(expand("~/.vimrc.local"))
+  source ~/.vimrc.local
+endif
