@@ -414,7 +414,7 @@ let g:copilot_idle_delay = 400
 let g:ale_disable_lsp = 0
 
 let s:config_root = expand('<sfile>:p:h') . '/.vimrc.d'
-
+" In the repo the path is vimrc but onced installed it will be ~/.vimrc.d
 for s:file in [
       \ '20-mappings.vim',
       \ '30-functions.vim',
