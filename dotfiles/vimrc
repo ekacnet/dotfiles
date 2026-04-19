@@ -18,121 +18,6 @@ filetype plugin indent on
 
 syntax on
 
-" n = normal (ie. not in command, visual, select)
-" i = insert mode
-" c = command mode
-" v = visual mode
-
-
-" enable goyo + movement tzz
-" zz: put current line at the center of the screen keep current column
-nmap \W mt:Goyo<CR>'tzz
-nmap \c :call TmuxPaneClear()<CR>
-
-nmap \d :ALEToggleBuffer<CR>
-nmap \f :ALEFix<CR>
-" Invert number
-nmap \n :setlocal number!<CR>:setlocal number?<CR>
-" Invert paste mode !
-nmap \o :set paste!<CR>:set paste?<CR>
-" Invert number mode !
-nmap \p :ProseMode<CR>
-" allow to unhilight search
-nmap \q :nohlsearch<CR>
-" repeat the last command in the other tmux pane
-nmap \r :call TmuxPaneRepeat()<CR>
-" Enable spellchecker in the current buffer
-nmap \s :setlocal invspell<CR>
-" Invert the wrap mode and display the status in the command line
-nmap \w :setlocal wrap!<CR>:setlocal wrap?<CR>
-" Close quickfix window
-nmap \x :cclose<CR>
-" Useful on mac, save the file and call open on the filename of the current buffer (%)
-nmap \z :w<CR>:!open %<CR><CR>
-
-nmap <Leader>t :Files<CR>
-nmap ; :Buffers<CR>
-" Navigate more easily ALE ...
-nmap <silent> ]aj :ALENext<cr>
-nmap <silent> [ak :ALEPrevious<cr>
-
-nmap <silent> ]om :call EnableMypyLinter()<CR>
-nmap <silent> [om :call DisableMypyLinter()<CR>
-" Codex shortcuts:
-"   ,cc in normal mode opens an interactive Codex session in a split
-"   ,cp prompts for an initial instruction before opening Codex
-"   ,cc in visual mode asks for an instruction and sends the selected text
-"   <ctrl-w>-c to close the window
-nnoremap <silent> <leader>cc :Codex<CR>
-nnoremap <silent> <leader>cp :call <SID>CodexPrompt()<CR>
-xnoremap <silent> <leader>cc :<C-u>call <SID>CodexSendSelection('')<CR>
-
-nnoremap <Leader>u :GundoToggle<CR>
-
-" Turn off linewise keys. Normally, the `j' and `k' keys move the cursor down one entire line. with
-" line wrapping on, this can cause the cursor to actually skip a few lines on the screen because
-" it's moving from line N to line N+1 in the file. I want this to act more visually -- I want `down'
-" to mean the next line on the screen
-nmap j gj
-nmap k gk
-
-" Marks should go to the column, not just the line. Why isn't this the default?
-nnoremap ' `
-
-" Use ctrl + e to switch buffer
-nmap <C-e> :e#<CR>
-
-" Move between open buffers.
-nmap <C-n> :bnext<CR>
-nmap <C-p> :bprev<CR>
-
-" Use the space key to toggle folds
-nnoremap <space> za
-vnoremap <space> zf
-
-" Super fast window movement shortcuts
-nmap <C-j> <C-W>j
-nmap <C-k> <C-W>k
-nmap <C-h> <C-W>h
-nmap <C-l> <C-W>l
-
-" keep current line/col when switching left to right and vice versa
-nnoremap <C-w>h :silent call KeepCurrentLine('h')<CR>
-nnoremap <C-w>l :silent call KeepCurrentLine('l')<CR>
-
-" Search for the word under the cursor in the current directory + create a [m]ark named [o] so that
-" we can return to the original location, nb: we need to have a ":" to enter in command mode and
-" type the function name (Ack, ...)
-" ! to not jump to the first result, see make command documentation
-" \b: word boundary end
-nmap <Esc>F   mo:GGrepw! "\b<cword>\b"<CR>
-"Prefer GGrep over Ggrep from vim-fugitive, also vim-fugitive is not dealing with \b markers
-"nmap <Esc>K   :Ggrep -q "<cword>" <CR>
-nmap <Esc>f   mo:Sack! "\b<cword>\b"<CR>
-"<C-U> remove the visual range
-vmap <Esc>f   mo:<C-U>VAck!<CR>
-vmap <Esc>F   mo:<C-U>VGGrep!<CR>
-
-" Alt-W to delete a buffer and remove it from the list but keep the window via bufkill.vim
-nmap <Esc>w :BD<CR>
-
-" Quickly edit/reload the vimrc file
-nmap <silent> <leader>ev :e $MYVIMRC<CR>
-nmap <silent> <leader>sv :so $MYVIMRC<CR>
-
-" \ is actually quite complicated to get on any keyboard I feel
-nmap , \
-
-" Typing `$c` on the command line expands to the current path, so it's easy to edit a file in
-" the same directory as the current file.
-" Note: <C-\>e execute the function after it
-cnoremap $c <C-\>eCurrentFileDir()<CR>
-
-" in case you forgot to sudo, typing w!! in command mode will force the file to be written
-" through sudo + tee
-cnoremap w!! %!sudo tee > /dev/null %
-
-
 " Functions
 " ! to override
 function! GetVisualSelection(delim)
@@ -913,6 +798,17 @@ if executable('tmux') && exists('$TMUX')
 endif
 call deoplete#custom#option('auto_complete_delay', 200)
 let g:ale_disable_lsp = 0
+
+let s:config_root = expand('<sfile>:p:h') . '/.vimrc.d'
+
+for s:file in [
+      \ '20-mappings.vim',
+      \ ]
+  execute 'source' fnameescape(s:config_root . '/' . s:file)
+endfor
+
+unlet s:file
+unlet s:config_root
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
 endif
