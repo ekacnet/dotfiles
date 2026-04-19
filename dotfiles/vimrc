@@ -302,13 +302,6 @@ let s:pylsp_options = {
   \   },
   \}
 
-" Get details on the variable/function under the cursor
-" nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-" Go to definition
-" nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-" Rename
-" nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-
 
 " LSC settings
 let g:lsc_server_commands = {

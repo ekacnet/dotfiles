@@ -160,27 +160,27 @@ function! s:isdictionary(x)
   return type(a:x) == v:t_dict
 endfunction
 
+function! PythonLinters()
+  return copy(get(get(b:, 'ale_linters', {}), 'python', get(g:ale_linters, 'python', [])))
+endfunction
+
 function! DisableMypyLinter()
-  let l:linters = get(b:, 'ale_linters', [])
-  if s:isdictionary(l:linters)
-    if has_key(b:ale_linters, 'mypy')
-      b:ale_linters['mypy'] = {}
-    endif
+  let l:python_linters = PythonLinters()
+  let l:index = index(l:python_linters, 'mypy')
+  if l:index != -1
+    call remove(l:python_linters, l:index)
   endif
+  let b:ale_linters = {'python': l:python_linters}
 endfunction
 
 function! EnableMypyLinter()
-  let l:linters = get(b:, 'ale_linters', [])
-  if !s:isdictionary(l:linters)
-    let b:ale_linters = {
-    \  'python' : g:ale_linters['python']
-    \  }
+  let l:python_linters = PythonLinters()
+  if index(l:python_linters, 'mypy') == -1
+    call add(l:python_linters, 'mypy')
   endif
-
-  if !has_key(b:ale_linters, 'python')
-    call add(b:ale_linters['python'], 'mypy')
-  endif
+  let b:ale_linters = {'python': l:python_linters}
 endfunction
+
 
 " Commands to send common keystrokes using tmux
 " +1 aka next pane
