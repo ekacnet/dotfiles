@@ -44,8 +44,8 @@ nnoremap <silent> [om :call DisableMypyLinter()<CR>
 "   ,cc in visual mode asks for an instruction and sends the selected text
 "   <ctrl-w>-c to close the window
 nnoremap <silent> <leader>cc :Codex<CR>
-nnoremap <silent> <leader>cp :call <SID>CodexPrompt()<CR>
-xnoremap <silent> <leader>cc :<C-u>call <SID>CodexSendSelection('')<CR>
+nnoremap <silent> <leader>cp :call CodexPrompt()<CR>
+xnoremap <silent> <leader>cc :<C-u>call CodexSendSelection('')<CR>
 
 nnoremap <Leader>u :GundoToggle<CR>
 
