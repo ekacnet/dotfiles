@@ -1,8 +1,7 @@
 # Store a lot of stuff in my history
 
-# don't add simple commands like ls, bg/fg ... and the one starting with a ' ' in the history file
-export HISTIGNORE="ls:bg:fg:exit:pwd:clear:mount:umount:^ *"
 
+mkdir -p ~/.bashrc.d/completion
 # If I have fzf ...
 if [ x$(which fzf) != "x" ]; then
   # There is 2 parts
@@ -29,19 +28,13 @@ if [ x$(which fzf) != "x" ]; then
     source ${BREW_ROOT:-/opt/homebrew}/opt/fzf/shell/key-bindings.bash
   fi
 
-
-  #export FZF_DEFAULT_COMMAND='ag --nocolor --hidden -g ""'
+  #export FZF_DEFAULT_COMMAND='rg --nocolor --hidden -g ""'
   export FZF_DEFAULT_COMMAND='git ls-files'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   export FZF_DEFAULT_OPTS='
   --color fg:242,bg:236,hl:65,fg+:15,bg+:239,hl+:108
   --color info:108,prompt:109,spinner:108,pointer:168,marker:168
   '
-fi
-
-# I always type vi rather than vim ...
-if [ -n "$(which vim)" ]; then
-  alias vi='vim'
 fi
 
 if [ -e $HOME/.bashrc.d/scm-prompt.sh ]; then
@@ -67,6 +60,19 @@ else
     __git_ps1 "(%s) "
   }
 fi
+
+if [ -e ~/.bashrc.d/completion/kube_completion_bash.sh ]; then
+  source ~/.bashrc.d/completion/kube_completion_bash.sh
+elif which kubectl &>/dev/null;  then
+  kubectl completion bash | sed 's#"${requestComp}" 2>/dev/null#"${requestComp}" 2>/dev/null | ghead -n -1 | fzf ${FZF_KUBECTL_OPTS} #g' > ~/.bashrc.d/completion/kube_completion_bash.sh
+  source ~/.bashrc.d/completion/kube_completion_bash.sh
+else
+  # no-op
+  true
+fi
+
+
+### Functions ###
 
 function prompt-show-status ()
 {
@@ -139,16 +145,37 @@ function _set_mouse_on() {
   fi
 }
 
+### exports ###
+
 source $HOME/.bashrc.d/term_colors
 TITLE="\[\e]2;\u@\h: \W\a\]"
+# Configure prompt
 export PS1="$TITLE$N[$MC\t$N]──[$MR\u$N@$MB\h$N]:$MG\w $N\$\n\
 └──$N\$(prompt-show-status)$N $Y\${VIRTUAL_ENV_PROMPT}$N$MM\$(_dotfiles_scm_info)$N\$ "
+
+# Do not prepend mosh to window title
+export MOSH_TITLE_NOPREFIX=y
+# don't add simple commands like ls, bg/fg ... and the one starting with a ' ' in the history file
+export HISTIGNORE="ls:bg:fg:exit:pwd:clear:mount:umount:^ *"
+export PATH=$(add_to_path "$HOME/bin" 1)
+export HISTSIZE=100000
+export HISTFILESIZE=200000
+export HISTCONTROL=ignoreboth
+export FZF_KUBECTL_OPTS="-1 -0 --bind tab:accept"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export BAT_PAGER="less -RF"
+# A somewhat readable color scheme
+export BAT_THEME=base16
+
+if [ "$TERM" == "xterm-kitty" ]; then
+  export TERM="xterm-256color"
+fi
+
 if [ -n "$(which vim)" ]; then
   export EDITOR=vim
 fi
-# Do not prepend mosh to window title
-export MOSH_TITLE_NOPREFIX=y
-export PATH=$(add_to_path "$HOME/bin" 1)
+
+
 # Fix SSH auth socket location so agent forwarding works with tmux.
 TARGET=~/.ssh/ssh_auth_sock
 if [ -n "$TMUX" ]; then
@@ -159,6 +186,14 @@ else
         ln -sf $SSH_AUTH_SOCK $TARGET
   fi
 fi
+
+
+### ALIASES ###
+# I always type vi rather than vim ...
+if [ -n "$(which vim)" ]; then
+  alias vi='vim'
+fi
+
 if which batcat &>/dev/null; then
   alias less='batcat'
   alias yless='batcat -l yaml'
@@ -171,38 +206,18 @@ else
   alias jless='less'
   alias yless='less'
 fi
+alias k='kubectl'
+alias kt='kubectl --context'
+alias ls='ls --color'
+alias gamend='git commit --amend --no-edit'
+alias greflog='git reflog --pretty=format:"%C(yellow)%h%C(reset) %aD %C(green)%gd%C(reset)%C(auto)%d%C(reset): %s" '
+
+
+
+
 # Bash 4.2 and above try to add a \ before variables when "tabbing" a path with a variable
 # shopt -s direxpand could be used and revert to 4.1 behavior where TAB would expand the variable
 # Note on 8/16/2023 this is also having a nasty side effect of disabling custom completes commands
 #shopt -u progcomp
 shopt -s progcomp
 shopt -s direxpand 2>/dev/null
-export HISTSIZE=100000
-export HISTFILESIZE=200000
-export HISTCONTROL=ignoreboth
-if [ "$TERM" == "xterm-kitty" ]; then
-  export TERM="xterm-256color"
-
-fi
-
-alias gamend='git commit --amend --no-edit'
-alias greflog='git reflog --pretty=format:"%C(yellow)%h%C(reset) %aD %C(green)%gd%C(reset)%C(auto)%d%C(reset): %s" '
-
-export FZF_KUBECTL_OPTS="-1 -0 --bind tab:accept"
-mkdir -p ~/.bashrc.d/completion
-if [ -e ~/.bashrc.d/completion/kube_completion_bash.sh ]; then
-  source ~/.bashrc.d/completion/kube_completion_bash.sh
-else
-  kubectl completion bash | sed 's#"${requestComp}" 2>/dev/null#"${requestComp}" 2>/dev/null | ghead -n -1 | fzf ${FZF_KUBECTL_OPTS} #g' > ~/.bashrc.d/completion/kube_completion_bash.sh
-  source ~/.bashrc.d/completion/kube_completion_bash.sh
-fi
-
-alias k='kubectl'
-alias kt='kubectl --context'
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-export BAT_PAGER="less -RF"
-# A somewhat readable color scheme
-export BAT_THEME=base16
-
-
-alias ls='ls --color'
