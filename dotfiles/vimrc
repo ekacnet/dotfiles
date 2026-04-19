@@ -25,32 +25,18 @@ syntax on
 " v = visual mode
 
 
-" TODO figure out what I want from this
-" NERDTreeFind
 " Useful macros I use the most
 nmap \A :set formatoptions+=a<CR>:echo "autowrap enabled"<CR>
 nmap \a :set formatoptions-=a<CR>:echo "autowrap disabled"<CR>
 nmap \F :NERDTreeFind<CR>
-" Tab indent mode 8 chars
-nmap \M :set noexpandtab tabstop=8 softtabstop=4 shiftwidth=4<CR>
-" Indent mode 8 chars
-nmap \T :set expandtab tabstop=8 shiftwidth=8 softtabstop=4<CR>
 " enable goyo + movement tzz
 " zz: put current line at the center of the screen keep current column
 nmap \W mt:Goyo<CR>'tzz
-" No C indentation mode and 80 cols and autowrap
-nmap \b :set nocin tw=80<CR>:set formatoptions+=a<CR>
 nmap \c :call TmuxPaneClear()<CR>
 nmap \d :ALEToggleBuffer<CR>
-nmap \e :NERDTreeToggle<CR>
 nmap \f :ALEFix<CR>
-" Switch gitgutter on/off
-nmap \g :GitGutterToggle<CR>
-nmap \i vip:sort<CR>
 " Invert number
 nmap \n :setlocal number!<CR>:setlocal number?<CR>
-" Small indentation mode
-nmap \m :set expandtab tabstop=2 shiftwidth=2 softtabstop=2<CR>
 " Invert paste mode !
 nmap \o :set paste!<CR>:set paste?<CR>
 " Invert number mode !
@@ -59,13 +45,8 @@ nmap \p :ProseMode<CR>
 nmap \q :nohlsearch<CR>
 " repeat the last command in the other tmux pane
 nmap \r :call TmuxPaneRepeat()<CR>
-nmap ùr :call TmuxPaneRepeat()<CR>
 " Enable spellchecker in the current buffer
 nmap \s :setlocal invspell<CR>
-" set to expandtab, ts=4,sw=4,sts=4
-nmap \t :set expandtab tabstop=4 shiftwidth=4 softtabstop=4<CR>
-"Invert the list mode in the current buffer and display the status in the command line
-nmap \u :setlocal list!<CR>:setlocal list?<CR>
 " Invert the wrap mode and display the status in the command line
 nmap \w :setlocal wrap!<CR>:setlocal wrap?<CR>
 " Close quickfix window
@@ -74,7 +55,6 @@ nmap \x :cclose<CR>
 nmap \z :w<CR>:!open %<CR><CR>
 nmap ; :Buffers<CR>
 nmap <Leader>t :Files<CR>
-nmap <Leader>r :Tags<CR>
 map <C-c> :call FormatDiff()<CR>
 " Navigate more easily ALE ...
 nmap <silent> ]aj :ALENext<cr>
@@ -84,7 +64,6 @@ nmap <silent> ]om :call EnableMypyLinter()<CR>
 nmap <silent> [om :call DisableMypyLinter()<CR>
 
 
-nmap <F8> :TagbarToggle<CR>
 "Map F5 but with no recursion
 nnoremap <F5> :GundoToggle<CR>
 
