@@ -38,6 +38,15 @@ nnoremap <silent> [ak :ALEPrevious<cr>
 
 nnoremap <silent> ]om :call EnableMypyLinter()<CR>
 nnoremap <silent> [om :call DisableMypyLinter()<CR>
+" LSC helpers:
+"   <leader>lo opens the buffer-local diagnostics list managed by vim-lsc
+"   <leader>lq opens the workspace-wide diagnostics quickfix list
+"   <leader>ll shows all diagnostics for the current line
+"   <leader>lr restarts the LSP server for the current filetype
+nnoremap <silent> <leader>lo :lopen<CR>
+nnoremap <silent> <leader>lq :LSClientAllDiagnostics<CR>:copen<CR>
+nnoremap <silent> <leader>ll :LSClientLineDiagnostics<CR>
+nnoremap <silent> <leader>lr :LSClientRestartServer<CR>
 " Codex shortcuts:
 "   ,cc in normal mode opens an interactive Codex session in a split
 "   ,cp prompts for an initial instruction before opening Codex

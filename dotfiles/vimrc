@@ -229,168 +229,6 @@ highlight PmenuSel ctermbg=Magenta guibg=Magenta ctermfg=black guibg=black
 " PmenuThumb – thumb of the scrollbar
 
 
-" Which folder to look for lintrc folders
-let s:lintrcfolders = [ ".", expand("~")]
-
-let s:gittop = systemlist('git rev-parse --show-toplevel')
-" Are we in a git repo ?
-if len(s:gittop) > 0
-  if s:gittop[0][0] == "/"
-    " Does it start with a "/" ? if so also look there for lintrc files
-    call extend(s:lintrcfolders, [s:gittop[0]], 0)
-  endif
-endif
-
-" call globpath to get all the paths listed in s:lintrcfolders, ignore well known suffixes
-" like .bak or ~ (3rd option) and return a list (4th parameter)
-let s:lintrcpath = globpath(join(s:lintrcfolders, ","), ".pylintrc", 0, 1)
-if len(s:lintrcpath) > 0
-  " If any match take the first one
-  let g:ale_python_pylint_options = "--rcfile=". s:lintrcpath[0]
-endif
-
-let s:lintrcpath = globpath(join(s:lintrcfolders, ","), "tox.ini", 0, 1)
-if len(s:lintrcpath) == 0
-  let s:lintrcpath = globpath(join(s:lintrcfolders, ","), ".tox.ini", 0, 1)
-endif
-if len(s:lintrcpath) > 0
-  let g:ale_python_flake8_options = "--config ". s:lintrcpath[0]
-endif
-" cc (ie. gcc/clang) seems to get it pretty wrong with c++ headers so let's get rid of it
-let g:ale_linters_ignore = {
-      \'cpp': ['cc'],
-      \'c': ['cc'],
-      \}
-let g:ale_fix_on_save = 1
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_auto_select = 1
-" Different options for insert mode completion
-" menu: use a popup for completion
-" noinsert: Do not insert any text for a match until the user selects
-"           a match from the menu. Only works in combination with
-"           'menu' or 'menuone'. No effect if 'longest' is present.
-"
-
-let s:pylsp_options = {
-  \   'pylsp': {
-  \     'plugins': {
-  \       'autopep8': {
-  \         'enabled': v:false
-  \       },
-  \       'rope_rename': {
-  \         'enabled': v:false
-  \       },
-  \       'rope_completion': {
-  \         'enabled': v:false
-  \       },
-  \       'pycodestyle': {
-  \         'enabled': v:false
-  \       },
-  \       'mccabe': {
-  \         'enabled': v:false
-  \       },
-  \       'flake8': {
-  \         'enabled': v:false
-  \       },
-  \       'pylint': {
-  \         'enabled': v:false
-  \       },
-  \       'pyflakes': {
-  \         'enabled': v:false
-  \       }
-  \     }
-  \   },
-  \}
-
-
-" LSC settings
-let g:lsc_server_commands = {
- \  'sls': {
- \    'command': '/home/mat/bin/salt_lsp',
- \    'capabilities': ['completion'],
- \  },
- \  'typescript': {
- \    'command': 'typescript-language-server --stdio',
- \    'log_level': 2,
- \    'suppress_stderr': v:true,
- \  },
- \  'typescriptreact': {
- \    'command': 'typescript-language-server --stdio',
- \    'log_level': 2,
- \    'suppress_stderr': v:true,
- \  },
- \  'javascript': {
- \    'command': 'typescript-language-server --stdio',
- \    'log_level': 2,
- \    'suppress_stderr': v:true,
- \  },
- \  'python': {
- \    'name': 'pylsp',
- \    'prodcommand': ['pylsp', '--log-file', '/dev/null'],
- \    'command': ['pylsp', '-v', '--log-file', '/tmp/'..$USER..'-lc_pylsp.log'],
- \    'message_hooks': {
- \      'initialize': {
- \        'initializationOptions': s:pylsp_options,
- \      },
- \    },
- \  },
- \ 'cpp': {
- \   'command': '/usr/bin/ccls',
- \ },
- \ 'c': {
- \   'command': '/usr/bin/ccls',
- \ },
- \ 'go': {
- \   'command': ['gopls','-remote=auto'],
- \    "log_level": -1,
- \    "suppress_stderr": v:true,
- \ },
- \}
-
-let g:lsc_auto_map = {
- \  'GoToDefinition': 'gd',
- \  'FindReferences': 'gr',
- \  'Rename': 'gR',
- \  'ShowHover': 'K',
- \  'FindCodeActions': 'ga',
- \  'Completion': 'omnifunc',
- \}
-let g:lsc_enable_autocomplete  = v:true
-let g:lsc_enable_diagnostics   = v:false
-let g:lsc_reference_highlights = v:false
-let g:lsc_trace_level          = 'off'
-let g:lsc_default_map = v:true
-
-" Add fixer for python on python filetypes
-let g:ale_fixers = {
-  \   'python':       ['ruff', 'ruff_format'],
-  \   'go':           ['goimports','gofmt'],
-  \   'bzl':          ['buildifier'],
-  \   'terraform':    ['terraform'],
-  \   'javascript':    ['prettier'],
-  \   'typescript':    ['prettier'],
-  \}
-
-let g:ale_linters = {
-  \ 'go':      [ 'gopls', 'govet'],
-  \ 'python' : [ 'ruff'],
-  \ 'javascript' : ['cspell', 'eslint', 'flow',  'tsserver']
-  \}
-
-
-" Enable the use of dispatch to do search
-let g:ack_use_dispatch = 1
-let g:ale_python_pylsp_executable = 'pylsp'
-let g:ale_python_pylsp_config = s:pylsp_options
-
-" To quiet the errors about missing modules
-let g:ale_python_pylsp_options = '--log-file /tmp/null'
-let g:ale_go_gopls_options = '-remote=auto'
-"let g:ale_python_pylsp_options = '--log-file /tmp/pylsp_ale.log'
-" To debug
-" let g:ale_python_pylsp_options = '-v --log-file /tmp/'..$USER..'-ale_pylsp.log'
-
-
 " This needs to be at the and obviously
 " Now load specifics to this host
 " Specify the path to `coverage.json` file relative to your current working directory.
@@ -418,11 +256,11 @@ let s:config_root = expand('<sfile>:p:h') . '/.vimrc.d'
 for s:file in [
       \ '20-mappings.vim',
       \ '30-functions.vim',
+      \ '40-lsp.vim',
       \ ]
   execute 'source' fnameescape(s:config_root . '/' . s:file)
 endfor
 
-call deoplete#custom#option('auto_complete_delay', 200)
 unlet s:file
 unlet s:config_root
 
