@@ -55,9 +55,11 @@ let g:ack_use_dispatch = 1
 
 " Completion remains deoplete-based.
 let g:deoplete#enable_at_startup = 1
+" potentially change that to 0
 let g:deoplete#enable_auto_select = 1
 if exists('*deoplete#custom#option')
-  call deoplete#custom#option('auto_complete_delay', 200)
+  call deoplete#custom#option('auto_complete_delay', 500)
+  call deoplete#custom#option('auto_complete_start_length', 4)
 endif
 
 " Keep pylsp lean. ALE/ruff handle linting and formatting, so disable the
