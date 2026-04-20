@@ -193,6 +193,17 @@ if which clang-format >/dev/null 2>&1; then
   fi
 fi
 
+if ! which pyright-langserver >/dev/null 2>&1; then
+  if which npm >/dev/null 2>&1; then
+    echo "Installing pyright language server ..."
+    npm install -g pyright
+  else
+    echo "Skipping pyright setup because npm isn't installed."
+  fi
+else
+  echo "pyright language server is already installed."
+fi
+
 
 postinstall="$HOME/.postinstall"
 if [ -e "$postinstall" ]; then

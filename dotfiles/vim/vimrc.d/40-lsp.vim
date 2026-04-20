@@ -62,23 +62,6 @@ if exists('*deoplete#custom#option')
   call deoplete#custom#option('auto_complete_start_length', 4)
 endif
 
-" Keep pylsp lean. ALE/ruff handle linting and formatting, so disable the
-" overlapping pylsp plugins and use pylsp mainly for navigation/refactors.
-let s:pylsp_options = {
-  \   'pylsp': {
-  \     'plugins': {
-  \       'autopep8': {'enabled': v:false},
-  \       'rope_rename': {'enabled': v:false},
-  \       'rope_completion': {'enabled': v:false},
-  \       'pycodestyle': {'enabled': v:false},
-  \       'mccabe': {'enabled': v:false},
-  \       'flake8': {'enabled': v:false},
-  \       'pylint': {'enabled': v:false},
-  \       'pyflakes': {'enabled': v:false}
-  \     }
-  \   },
-  \}
-
 " vim-lsc owns definitions, references, implementations, hover, rename, code
 " actions, and symbols. Keep the default maps and override the ones you already
 " prefer.
@@ -103,14 +86,8 @@ let g:lsc_server_commands = {
  \    'suppress_stderr': v:true,
  \  },
  \  'python': {
- \    'name': 'pylsp',
- \    'prodcommand': ['pylsp', '--log-file', '/dev/null'],
- \    'command': ['pylsp', '-v', '--log-file', '/tmp/' .. $USER .. '-lc_pylsp.log'],
- \    'message_hooks': {
- \      'initialize': {
- \        'initializationOptions': s:pylsp_options,
- \      },
- \    },
+ \    'name': 'pyright',
+ \    'command': ['pyright-langserver', '--stdio'],
  \  },
  \  'cpp': {
  \    'command': '/usr/bin/ccls',
@@ -139,11 +116,6 @@ let g:lsc_enable_autocomplete = v:true
 let g:lsc_enable_diagnostics = v:false
 let g:lsc_reference_highlights = v:false
 let g:lsc_trace_level = 'off'
-
-" Keep ALE's pylsp integration quiet if it gets used indirectly by older code.
-let g:ale_python_pylsp_executable = 'pylsp'
-let g:ale_python_pylsp_config = s:pylsp_options
-let g:ale_python_pylsp_options = '--log-file /tmp/null'
 
 unlet s:gittop
 unlet s:lintrcfolders
