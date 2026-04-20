@@ -87,17 +87,14 @@ repos=(
   tpope/vim-unimpaired # for unimpared things like [a and ]a for file navigation
   junegunn/fzf.vim # fzf integration
   mileszs/ack.vim # ack integration
-  sheerun/vim-polyglot # ?
   dense-analysis/ale # async linting
   Shougo/deoplete.nvim # autocompletion
   roxma/nvim-yarp # required by deoplete
   roxma/vim-hug-neovim-rpc # required by deoplete
   hrsh7th/deoplete-vim-lsc.git # pluging to use LSC for deoplete
-  junegunn/goyo.vim # ?
-  vmware-archive/salt-vim.git # saltstack syntax
   natebosch/vim-lsc # language server client
-  CoderCookE/vim-chatgpt.git # ChatGPT integration in vim
-  madox2/vim-ai.git # AI Chat
+  junegunn/goyo.vim # distraction free writing
+  vmware-archive/salt-vim.git # saltstack syntax
   ruanyl/coverage.vim # Codecoverage for JS
 )
 
@@ -110,6 +107,9 @@ candidates=(
 
 deprecated=(
   autozimu/LanguageClient-neovim.git # Tried LC and decided that it's not so great (or that lsc is a better alternative)
+  CoderCookE/vim-chatgpt.git # ChatGPT integration in vim. codex instead
+  madox2/vim-ai.git # AI Chat, codex instead
+  sheerun/vim-polyglot # for type support
 )
 
 other_repos=(
