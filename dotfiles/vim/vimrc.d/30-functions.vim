@@ -94,11 +94,18 @@ function! s:CodexPrepareWindow() abort
   botright 15split
 endfunction
 
+function! s:CodexSendPrompt(prompt) abort
+  if empty(a:prompt) || !s:CodexBufferUsable()
+    return
+  endif
+
+  let l:job = term_getjob(s:codex_bufnr)
+  let l:channel = job_getchannel(l:job)
+  call ch_sendraw(l:channel, a:prompt . "\r")
+endfunction
+
 function! CodexOpen(prompt) abort
   let l:cmd = ['codex', '--cd', getcwd()]
-  if !empty(a:prompt)
-    call add(l:cmd, a:prompt)
-  endif
 
   if exists('*term_start')
     if s:CodexBufferUsable()
@@ -108,6 +115,7 @@ function! CodexOpen(prompt) abort
       call term_start(l:cmd, {'curwin': 1, 'term_finish': 'open'})
       let s:codex_bufnr = bufnr('%')
     endif
+    call s:CodexSendPrompt(a:prompt)
     startinsert
   elseif exists(':terminal')
     if s:CodexBufferUsable()
@@ -117,6 +125,7 @@ function! CodexOpen(prompt) abort
       execute 'terminal ++curwin ' . join(map(copy(l:cmd), 'shellescape(v:val)'), ' ')
       let s:codex_bufnr = bufnr('%')
     endif
+    call s:CodexSendPrompt(a:prompt)
     startinsert
   else
     echoerr 'Codex integration requires Vim with +terminal support'
@@ -291,4 +300,23 @@ function! FallbackSalt()
   if index(fts, &filetype) == -1
     set ft=yaml
   endif
+endfunction
+
+function! EndsWith(longer, shorter) abort
+    return a:longer[len(a:longer)-len(a:shorter):] ==# a:shorter
+endfunction
+
+function! CurrentFileDir()
+  let cmd = getcmdline()
+  if len(cmd) == 0
+    let cmd = "e "
+  endif
+  if EndsWith(cmd, '(')
+    let prefix = "'"
+  else
+    let prefix = ''
+  endif
+  let cmd = cmd .. prefix .. expand("%:p:h") .. "/"
+  call setcmdpos(strlen(cmd) + 1)
+  return cmd
 endfunction
