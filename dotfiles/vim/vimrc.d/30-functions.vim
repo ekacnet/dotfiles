@@ -54,10 +54,83 @@ function! ProseMode()
 endfunction
 
 " Codex helpers:
-"   :Codex opens Codex in a terminal split rooted at the current working directory
+"   :Codex opens Codex rooted at the current working directory
+"   Prefer a tmux bottom pane when running inside tmux; otherwise use a Vim terminal split.
 "   :Codex write a regression test for this file
 "   visually select text, then run :CodexSelection refactor this piece
 let s:codex_bufnr = -1
+
+function! s:CodexPromptWithContext(prompt) abort
+  if empty(a:prompt)
+    return ''
+  endif
+
+  let l:context = ['Working directory: ' . getcwd()]
+  let l:filename = expand('%:p')
+  if !empty(l:filename)
+    call add(l:context, 'Current file: ' . l:filename)
+  endif
+  if !empty(&filetype)
+    call add(l:context, 'Filetype: ' . &filetype)
+  endif
+
+  return join(l:context, "\n") . "\n\n" . a:prompt
+endfunction
+
+function! s:CodexTmuxAvailable() abort
+  return executable('tmux') && exists('$TMUX')
+endfunction
+
+function! s:CodexTmuxSendPrompt(pane, prompt) abort
+  if empty(a:prompt)
+    return
+  endif
+
+  let l:tmp = tempname()
+  let l:buffer = 'vim-codex-' . getpid()
+
+  call writefile(split(a:prompt, "\n", 1), l:tmp)
+  call system(['tmux', 'load-buffer', '-b', l:buffer, l:tmp])
+  call delete(l:tmp)
+
+  if v:shell_error
+    echoerr 'Failed to load Codex prompt into tmux buffer'
+    return
+  endif
+
+  call system(['tmux', 'paste-buffer', '-d', '-b', l:buffer, '-t', a:pane])
+  if v:shell_error
+    echoerr 'Failed to paste Codex prompt into tmux pane'
+    return
+  endif
+
+  call system(['tmux', 'send-keys', '-t', a:pane, 'Enter'])
+endfunction
+
+function! s:CodexOpenTmux(prompt) abort
+  let l:cwd = getcwd()
+  let l:cmd = 'codex --cd ' . shellescape(l:cwd)
+  let l:pane = systemlist([
+        \ 'tmux',
+        \ 'split-window',
+        \ '-v',
+        \ '-p',
+        \ '25',
+        \ '-P',
+        \ '-F',
+        \ '#{pane_id}',
+        \ '-c',
+        \ l:cwd,
+        \ l:cmd,
+        \ ])
+
+  if v:shell_error || empty(l:pane)
+    echoerr 'Failed to open Codex tmux pane'
+    return
+  endif
+
+  call s:CodexTmuxSendPrompt(l:pane[0], a:prompt)
+endfunction
 
 function! s:CodexBufferUsable() abort
   if s:codex_bufnr <= 0 || !bufexists(s:codex_bufnr)
@@ -105,6 +178,13 @@ function! s:CodexSendPrompt(prompt) abort
 endfunction
 
 function! CodexOpen(prompt) abort
+  let l:prompt = s:CodexPromptWithContext(a:prompt)
+
+  if s:CodexTmuxAvailable()
+    call s:CodexOpenTmux(l:prompt)
+    return
+  endif
+
   let l:cmd = ['codex', '--cd', getcwd()]
 
   if exists('*term_start')
@@ -115,7 +195,7 @@ function! CodexOpen(prompt) abort
       call term_start(l:cmd, {'curwin': 1, 'term_finish': 'open'})
       let s:codex_bufnr = bufnr('%')
     endif
-    call s:CodexSendPrompt(a:prompt)
+    call s:CodexSendPrompt(l:prompt)
     startinsert
   elseif exists(':terminal')
     if s:CodexBufferUsable()
@@ -125,7 +205,7 @@ function! CodexOpen(prompt) abort
       execute 'terminal ++curwin ' . join(map(copy(l:cmd), 'shellescape(v:val)'), ' ')
       let s:codex_bufnr = bufnr('%')
     endif
-    call s:CodexSendPrompt(a:prompt)
+    call s:CodexSendPrompt(l:prompt)
     startinsert
   else
     echoerr 'Codex integration requires Vim with +terminal support'
