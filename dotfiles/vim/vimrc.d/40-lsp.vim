@@ -55,11 +55,32 @@ let g:ack_use_dispatch = 1
 
 " Completion remains deoplete-based.
 let g:deoplete#enable_at_startup = 1
-" potentially change that to 0
-let g:deoplete#enable_auto_select = 1
+let g:deoplete#enable_auto_select = 0
 if exists('*deoplete#custom#option')
   call deoplete#custom#option('auto_complete_delay', 500)
   call deoplete#custom#option('auto_complete_start_length', 4)
+  call deoplete#custom#option('keyword_patterns', {
+        \ '_': '[A-Za-z_][A-Za-z0-9_]*',
+        \})
+  call deoplete#custom#source('lsc', {
+        \ 'rank': 1000,
+        \ 'matchers': ['matcher_head'],
+        \ 'min_pattern_length': 3,
+        \})
+  call deoplete#custom#source('buffer', {
+        \ 'rank': 350,
+        \ 'matchers': ['matcher_head'],
+        \ 'min_pattern_length': 4,
+        \})
+  call deoplete#custom#source('around', {
+        \ 'rank': 320,
+        \ 'matchers': ['matcher_head'],
+        \ 'min_pattern_length': 4,
+        \})
+  call deoplete#custom#var('around', {
+        \ 'range_above': 120,
+        \ 'range_below': 120,
+        \})
 endif
 
 " vim-lsc owns definitions, references, implementations, hover, rename, code
